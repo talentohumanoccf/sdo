@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estructura y Mapeo de Procesos - Desarrollo Organizacional</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+        }
+        /* Custom dynamic height transition */
+        .expand-transition {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .expand-transition.open {
+            grid-template-rows: 1fr;
+        }
+        .expand-content {
+            overflow: hidden;
+        }
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        /* Animated connection lines */
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -40;
+            }
+        }
+        .connection-flow {
+            stroke-dasharray: 8, 12;
+            animation: dash 2s linear infinite;
+        }
+        /* Glow styles */
+        .glow-active {
+            box-shadow: 0 0 20px -3px rgba(245, 158, 11, 0.35);
+        }
+        /* Smooth view switching */
+        .view-pane {
+            transition: opacity 250ms ease-in-out, transform 250ms ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col antialiased overflow-x-hidden">
+
+    <!-- Ambient Glow Backgrounds -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <!-- Header -->
+    <header class="bg-slate-900/60 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20">
+                    <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-white flex items-center gap-2">
+                        Estructuración y Validación D.O.
+                        <span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/35 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Taller Activo</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Subdirección de Desarrollo Organizacional</p>
+                </div>
+            </div>
+
+            <!-- View Switcher & Toolbar -->
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Tabs -->
+                <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800/80">
+                    <button onclick="switchView('mindmap')" id="tab-mindmap" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        Red Neuronal
+                    </button>
+                    <button onclick="switchView('organigrama')" id="tab-organigrama" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Organigrama Jerárquico
+                    </button>
+                </div>
+
+                <div class="h-6 w-px bg-slate-850 hidden sm:block"></div>
+
+                <!-- Global actions -->
+                <div class="flex gap-1.5">
+                    <button onclick="expandAll()" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-[11px] font-semibold rounded-lg transition text-slate-300">
+                        Expandir
+                    </button>
+                    <button onclick="collapseAll()" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-[11px] font-semibold rounded-lg transition text-slate-300">
+                        Contraer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Workshop Instructions Banner -->
+    <div class="bg-amber-500/10 border-b border-amber-500/20 py-2.5 text-center text-xs text-amber-300 z-40 relative px-4">
+        <span class="font-bold">💡 Taller con Subdirector:</span> Alterna entre vistas. Haz clic en cualquier proceso o subproceso para auditar y validar su alcance estratégico e inputs/outputs.
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col gap-6 relative">
+        
+        <!-- ================= VISTA 1: RED NEURONAL (MINDMAP) ================= -->
+        <div id="view-mindmap" class="view-pane grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative min-h-[550px]">
+            
+            <!-- SVG Canvas overlay for Node Connections in Mindmap -->
+            <svg id="connections-svg" class="absolute inset-0 w-full h-full pointer-events-none z-10 hidden lg:block" style="min-height: 550px;">
+                <defs>
+                    <linearGradient id="grad-indigo" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6366f1" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.2"/>
+                    </linearGradient>
+                    <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.2"/>
+                    </linearGradient>
+                    <linearGradient id="grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#d97706" stop-opacity="0.2"/>
+                    </linearGradient>
+                    <linearGradient id="grad-emerald" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#10b881" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#059669" stop-opacity="0.2"/>
+                    </linearGradient>
+                </defs>
+                <g id="svg-paths-container"></g>
+            </svg>
+
+            <!-- LEFT COLUMN: Frentes de Trabajo (Equipos) -->
+            <div class="lg:col-span-4 flex flex-col gap-5 z-20 relative">
+                <div class="text-center lg:text-left mb-1">
+                    <span class="text-[9px] font-bold text-indigo-400 uppercase tracking-wider">Estructura Operativa</span>
+                    <h2 class="text-xs font-extrabold text-slate-400">Procesos Macrorreguladores</h2>
+                </div>
+
+                <!-- TED Node -->
+                <div id="card-ted" class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl hover:border-indigo-500/50 transition-all duration-300">
+                    <button onclick="toggleNode('ted')" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-xs border border-indigo-500/20 shadow-sm">TED</span>
+                            <div>
+                                <h4 class="text-xs font-black text-slate-100 uppercase tracking-wide">Transformación Empresarial Digital</h4>
+                                <p class="text-[10px] text-amber-500 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Por Validar
+                                </p>
+                            </div>
+                        </div>
+                        <span id="arrow-ted" class="text-slate-500 transition-transform duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div id="sub-ted" class="expand-transition">
+                        <div class="expand-content border-t border-slate-800/60 bg-slate-950/40 p-3 rounded-b-2xl flex flex-col gap-1.5">
+                            <p class="text-[11px] text-slate-300 italic p-1">"Pilar tecnológico que define las soluciones en nube, automatizaciones de procesos y canales corporativos ágiles."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INN Node -->
+                <div id="card-inn" class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl hover:border-purple-500/50 transition-all duration-300">
+                    <button onclick="toggleNode('inn')" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-xs border border-purple-500/20 shadow-sm">INN</span>
+                            <div>
+                                <h4 class="text-xs font-black text-slate-100 uppercase tracking-wide">Innovación y Co-creación</h4>
+                                <p class="text-[10px] text-amber-500 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Por Validar
+                                </p>
+                            </div>
+                        </div>
+                        <span id="arrow-inn" class="text-slate-500 transition-transform duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div id="sub-inn" class="expand-transition">
+                        <div class="expand-content border-t border-slate-800/60 bg-slate-950/40 p-3 rounded-b-2xl flex flex-col gap-1.5">
+                            <p class="text-[11px] text-slate-300 italic p-1">"Célula creativa orientada al diseño ágil, laboratorios focales y validación de hipótesis de servicio directamente en territorio."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRO Node -->
+                <div id="card-pro" class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl hover:border-amber-500/50 transition-all duration-300">
+                    <button onclick="toggleNode('pro')" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-xs border border-amber-500/20 shadow-sm">PRO</span>
+                            <div>
+                                <h4 class="text-xs font-black text-slate-100 uppercase tracking-wide">Procesos, Productividad y Estructura</h4>
+                                <p class="text-[10px] text-amber-500 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Por Validar
+                                </p>
+                            </div>
+                        </div>
+                        <span id="arrow-pro" class="text-slate-500 transition-transform duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div id="sub-pro" class="expand-transition">
+                        <div class="expand-content border-t border-slate-800/60 bg-slate-950/40 p-3 rounded-b-2xl flex flex-col gap-1.5">
+                            <p class="text-[11px] text-slate-300 italic p-1">"Ingeniería organizativa que audita la capacidad institucional, racionaliza los procedimientos y mide cargas y tiempos de servicio."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- G.H Node -->
+                <div id="card-gh" class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+                    <button onclick="toggleNode('gh')" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/20 shadow-sm">G.H</span>
+                            <div>
+                                <h4 class="text-xs font-black text-slate-100 uppercase tracking-wide">Gestión Humana y Talento</h4>
+                                <p class="text-[10px] text-amber-500 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Por Validar
+                                </p>
+                            </div>
+                        </div>
+                        <span id="arrow-gh" class="text-slate-500 transition-transform duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div id="sub-gh" class="expand-transition">
+                        <div class="expand-content border-t border-slate-800/60 bg-slate-950/40 p-3 rounded-b-2xl flex flex-col gap-1.5">
+                            <p class="text-[11px] text-slate-300 italic p-1">"Administrador del ciclo vital del colaborador, encargado del bienestar laboral, entrenamiento y la planificación de sucesión."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER COLUMN: CORE NODE -->
+            <div class="lg:col-span-4 flex justify-center py-6 lg:py-0 z-20">
+                <div id="core-node" class="relative group">
+                    <div class="absolute -inset-4 bg-indigo-500/15 rounded-full blur-xl group-hover:bg-indigo-500/25 transition duration-500"></div>
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-amber-500 rounded-full opacity-65 group-hover:opacity-100 transition duration-500 animate-spin" style="animation-duration: 15s;"></div>
+                    <div class="relative w-44 h-44 sm:w-52 sm:h-52 bg-slate-950 rounded-full flex flex-col items-center justify-center p-6 text-center border-4 border-slate-900">
+                        <span class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">Ecosistema Global</span>
+                        <h3 class="text-sm sm:text-base font-black text-white leading-tight">SUBDIRECCIÓN</h3>
+                        <p class="text-[11px] text-slate-400 leading-snug font-medium mt-1">Desarrollo Organizacional</p>
+                        <div class="mt-3 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-[9px] font-bold text-amber-400">
+                            6 Ejes Transversales
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Líneas de Conexión (Ejes Transversales) -->
+            <div class="lg:col-span-4 flex flex-col gap-3.5 z-20">
+                <div class="text-center lg:text-left mb-1">
+                    <span class="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Flujos del Tablero</span>
+                    <h2 class="text-xs font-extrabold text-slate-400">6 Líneas de Sinergia</h2>
+                </div>
+
+                <!-- Line 1 to 6 Map (Interactive) -->
+                <div onclick="inspectNode('line-1')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-emerald-500/50 rounded-xl cursor-pointer transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold flex items-center justify-center">①</span>
+                    <span class="text-xs font-semibold text-slate-200">Gestión del Conocimiento y Carrera</span>
+                </div>
+                <div onclick="inspectNode('line-2')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-blue-500/50 rounded-xl cursor-pointer transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold flex items-center justify-center">②</span>
+                    <span class="text-xs font-semibold text-slate-200">Analítica Organizacional (C.E.A)</span>
+                </div>
+                <div onclick="inspectNode('line-3')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-amber-500/50 rounded-xl cursor-pointer transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center justify-center">③</span>
+                    <span class="text-xs font-semibold text-slate-200">Experiencia de Cliente e Interna</span>
+                </div>
+                <div onclick="inspectNode('line-4')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-rose-500/50 rounded-xl cursor-pointer transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-bold flex items-center justify-center">④</span>
+                    <span class="text-xs font-semibold text-slate-200">Rediseño de Modelos de Negocio</span>
+                </div>
+                <div onclick="inspectNode('line-5')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-purple-500/50 rounded-xl cursor-pointer transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-bold flex items-center justify-center">⑤</span>
+                    <span class="text-xs font-semibold text-slate-200">Innovación, Cocreación y Agilidad</span>
+                </div>
+                <div onclick="inspectNode('line-6')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-orange-500/50 rounded-xl cursor-pointer transition flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-xs font-bold flex items-center justify-center">⑥</span>
+                    <span class="text-xs font-semibold text-slate-200">Eficiencia y Gestión del Cambio</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VISTA 2: ORGANIGRAMA JERÁRQUICO ================= -->
+        <div id="view-organigrama" class="view-pane hidden flex-col items-center gap-6 min-h-[550px]">
+            
+            <!-- NIVEL 1: ALTA DIRECCIÓN (CORE) -->
+            <div class="flex flex-col items-center relative w-full">
+                <div onclick="inspectNode('subdireccion')" class="cursor-pointer bg-slate-950 border-2 border-indigo-500/80 hover:border-indigo-400 rounded-2xl px-6 py-4 text-center max-w-xs shadow-lg transition duration-200 relative z-20">
+                    <span class="text-[9px] bg-indigo-500/10 border border-indigo-500/25 text-indigo-400 px-2 py-0.5 rounded font-black tracking-widest uppercase">Dirección Estratégica</span>
+                    <h3 class="text-sm font-black text-white mt-1.5 uppercase tracking-wide">SUBDIRECCIÓN DE D.O.</h3>
+                    <p class="text-[10px] text-slate-400 mt-1 leading-normal">Mando Institucional y Diseño de Capacidad Humana</p>
+                </div>
+                <!-- Vertical Stem Down to level 2 -->
+                <div class="w-0.5 bg-slate-700 h-8"></div>
+                <!-- Horizontal Bridge for Branches (Shows on desktop/tablet) -->
+                <div class="hidden md:block w-[78%] h-0.5 bg-slate-700 relative">
+                    <!-- Drop lines down to the 4 columns -->
+                    <div class="absolute left-0 top-0 w-0.5 bg-slate-700 h-6"></div>
+                    <div class="absolute left-[33.3%] top-0 w-0.5 bg-slate-700 h-6"></div>
+                    <div class="absolute left-[66.6%] top-0 w-0.5 bg-slate-700 h-6"></div>
+                    <div class="absolute right-0 top-0 w-0.5 bg-slate-700 h-6"></div>
+                </div>
+            </div>
+
+            <!-- NIVEL 2: LOS 4 PROCESOS LÍDERES (CHASSIS) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full items-start relative z-20">
+                
+                <!-- Columna TED -->
+                <div class="flex flex-col items-center">
+                    <!-- Mobile stem spacer -->
+                    <div class="md:hidden w-0.5 bg-slate-700 h-4"></div>
+                    
+                    <!-- Card TED -->
+                    <div onclick="inspectNode('ted')" class="cursor-pointer w-full bg-slate-900 border border-slate-800 hover:border-indigo-500/60 rounded-xl p-3 text-center transition">
+                        <span class="text-[8px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-1.5 py-0.5 rounded font-bold">TED</span>
+                        <h4 class="text-xs font-bold text-slate-100 mt-1 leading-tight">Transf. Empresarial Digital</h4>
+                        <p class="text-[9px] text-slate-400 mt-0.5">Sistemas e Infrestructura Ágil</p>
+                    </div>
+                    
+                    <div class="w-0.5 bg-slate-800 h-4"></div>
+                    
+                    <!-- Nested Subprocesses (TED) -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <div onclick="inspectNode('ted-conocimiento')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-indigo-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-emerald-400 font-bold block mb-0.5">① G. del Conocimiento</span>
+                            <span class="text-slate-400 leading-tight">Resguardo y preservación de guías organizacionales.</span>
+                        </div>
+                        <div onclick="inspectNode('ted-cultura')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-indigo-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-indigo-400 font-bold block mb-0.5">Cultura Digital</span>
+                            <span class="text-slate-400 leading-tight">Apropiación tecnológica y eliminación de barreras.</span>
+                        </div>
+                        <div onclick="inspectNode('ted-experiencia')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-indigo-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-amber-400 font-bold block mb-0.5">③ Experiencia CX/EX</span>
+                            <span class="text-slate-400 leading-tight">Diseño de interacciones para el usuario.</span>
+                        </div>
+                        <div onclick="inspectNode('ted-agiles')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-indigo-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-purple-400 font-bold block mb-0.5">⑤ Metodologías Ágiles</span>
+                            <span class="text-slate-400 leading-tight">Estructuración ágil y gestión operativa SCRUM.</span>
+                        </div>
+                        <div onclick="inspectNode('ted-cambio')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-indigo-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-orange-400 font-bold block mb-0.5">⑥ Gestión del Cambio</span>
+                            <span class="text-slate-400 leading-tight">Estrategias de adopción y mitigación de fricción.</span>
+                        </div>
+                        <div onclick="inspectNode('ted-cloud')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-indigo-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-amber-400 font-bold block mb-0.5">③ Estrategia Cloud</span>
+                            <span class="text-slate-400 leading-tight">Arquitectura y servicios de soporte en la nube.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna INN -->
+                <div class="flex flex-col items-center">
+                    <div class="md:hidden w-0.5 bg-slate-700 h-4"></div>
+                    <div onclick="inspectNode('inn')" class="cursor-pointer w-full bg-slate-900 border border-slate-800 hover:border-purple-500/60 rounded-xl p-3 text-center transition">
+                        <span class="text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 py-0.5 rounded font-bold">INN</span>
+                        <h4 class="text-xs font-bold text-slate-100 mt-1 leading-tight">Innovación y Cocreación</h4>
+                        <p class="text-[9px] text-slate-400 mt-0.5">Prototipado de Ideas Rápidas</p>
+                    </div>
+                    <div class="w-0.5 bg-slate-800 h-4"></div>
+                    <!-- Nested Subprocesses (INN) -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <div onclick="inspectNode('inn-experiencia')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-purple-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-amber-400 font-bold block mb-0.5">③ Experiencia CX/EX</span>
+                            <span class="text-slate-400 leading-tight">Cocreación de mapas de empáticos de usuario.</span>
+                        </div>
+                        <div onclick="inspectNode('inn-diseno')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-purple-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-rose-400 font-bold block mb-0.5">④ Diseño y Rediseño</span>
+                            <span class="text-slate-400 leading-tight">Estructuración y arquitectura conceptual de servicios.</span>
+                        </div>
+                        <div onclick="inspectNode('inn-ideacion')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-purple-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-purple-400 font-bold block mb-0.5">⑤ Ideación Estratégica</span>
+                            <span class="text-slate-400 leading-tight">Laboratorio creativo y talleres rápidos de cocreación.</span>
+                        </div>
+                        <div onclick="inspectNode('inn-cultura')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-purple-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-purple-400 font-bold block mb-0.5">Cultura de Innovación</span>
+                            <span class="text-slate-400 leading-tight">Sistemas de reconocimientos e iniciativas libres.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna PRO -->
+                <div class="flex flex-col items-center">
+                    <div class="md:hidden w-0.5 bg-slate-700 h-4"></div>
+                    <div onclick="inspectNode('pro')" class="cursor-pointer w-full bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl p-3 text-center transition">
+                        <span class="text-[8px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                        <h4 class="text-xs font-bold text-slate-100 mt-1 leading-tight">Procesos y Productividad</h4>
+                        <p class="text-[9px] text-slate-400 mt-0.5">Medición de Capacidades Técnicas</p>
+                    </div>
+                    <div class="w-0.5 bg-slate-800 h-4"></div>
+                    <!-- Nested Subprocesses (PRO) -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <div onclick="inspectNode('pro-cea')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-amber-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-blue-400 font-bold block mb-0.5">② Alineación C.E.A</span>
+                            <span class="text-slate-400 leading-tight">Estructuración orgánica alineada a la estrategia.</span>
+                        </div>
+                        <div onclick="inspectNode('pro-diseno')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-amber-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-rose-400 font-bold block mb-0.5">④ Diseño y Rediseño</span>
+                            <span class="text-slate-400 leading-tight">Redacción técnica y diagramación de flujogramas.</span>
+                        </div>
+                        <div onclick="inspectNode('pro-cargas')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-amber-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-orange-400 font-bold block mb-0.5">⑥ Estudio de Cargas</span>
+                            <span class="text-slate-400 leading-tight">Tiempos y movimientos organizativos de planta.</span>
+                        </div>
+                        <div onclick="inspectNode('pro-optimizacion')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-amber-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-emerald-400 font-bold block mb-0.5">① Optimización de Proc.</span>
+                            <span class="text-slate-400 leading-tight">Reingeniería procedimental para eliminar burocracia.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna G.H -->
+                <div class="flex flex-col items-center">
+                    <div class="md:hidden w-0.5 bg-slate-700 h-4"></div>
+                    <div onclick="inspectNode('gh')" class="cursor-pointer w-full bg-slate-900 border border-slate-800 hover:border-emerald-500/60 rounded-xl p-3 text-center transition">
+                        <span class="text-[8px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-bold">G.H</span>
+                        <h4 class="text-xs font-bold text-slate-100 mt-1 leading-tight">Gestión Humana y Talento</h4>
+                        <p class="text-[9px] text-slate-400 mt-0.5">Administración del Personal</p>
+                    </div>
+                    <div class="w-0.5 bg-slate-800 h-4"></div>
+                    <!-- Nested Subprocesses (G.H) -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <div onclick="inspectNode('gh-seleccion')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-slate-400 font-bold block mb-0.5">Selección y Contratación</span>
+                            <span class="text-slate-400 leading-tight">Captura, evaluación y onboarding de talentos.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-formacion')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-emerald-400 font-bold block mb-0.5">① Formación y Capacitación</span>
+                            <span class="text-slate-400 leading-tight">Entrenamiento procedimental continuo del personal.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-evaluacion')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-slate-400 font-bold block mb-0.5">Evaluación de Desempeño</span>
+                            <span class="text-slate-400 leading-tight">Control y medición de productividad laboral técnica.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-bienestar')" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-slate-400 font-bold block mb-0.5">Bienestar & SST</span>
+                            <span class="text-slate-400 leading-tight">Programas de salud ocupacional, seguridad y clima.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Detailed Node Drawer / Inspector Panel -->
+    <section id="inspector-panel" class="max-w-7xl w-full mx-auto px-4 pb-12 sm:px-6 lg:px-8">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4 mb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg border border-amber-500/20">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    </span>
+                    <h3 class="text-sm font-extrabold text-slate-300 uppercase tracking-widest">🔎 Inspector y Mesa de Validación Activa</h3>
+                </div>
+                <!-- Validation Badge -->
+                <div id="global-validation-badge" class="px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-[10px] font-bold text-amber-400 flex items-center gap-1.5 animate-pulse">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                    Estado: Pendiente Definición de Alcance
+                </div>
+            </div>
+
+            <div id="inspector-placeholder" class="text-center py-8 text-slate-500 text-xs">
+                Haz clic en cualquier proceso de la izquierda o en las líneas de conexión de la derecha para iniciar la mesa de validación con el subdirector.
+            </div>
+
+            <div id="inspector-content" class="hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-5 pb-3 border-b border-slate-800/40">
+                    <div>
+                        <span id="inspect-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border">Badge</span>
+                        <h4 id="inspect-name" class="text-lg font-black text-white mt-1">Nombre del Nodo</h4>
+                    </div>
+                    <div class="text-left sm:text-right">
+                        <p class="text-[10px] text-slate-500 uppercase font-black">Clasificación</p>
+                        <p id="inspect-type" class="text-xs text-indigo-400 font-bold">Tipo</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- Left Block: Caracterización, Articulación & Alcance por Validar (Width: 7/12) -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                            <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">📖 Caracterización del Proceso</h5>
+                            <p id="inspect-carac" class="text-xs text-slate-200 italic leading-relaxed">Definición...</p>
+                        </div>
+
+                        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                            <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">🔗 Articulación Neuronal (Sinergias)</h5>
+                            <p id="inspect-artic" class="text-xs text-slate-200 leading-relaxed">Conexión...</p>
+                        </div>
+
+                        <!-- ALCANCE CRITICAL FOCUS AREA -->
+                        <div class="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 glow-active transition-all duration-300">
+                            <div class="flex items-center justify-between mb-2">
+                                <h5 class="text-[10px] font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    ⚠️ Alcance Propuesto (Por Definir)
+                                </h5>
+                                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="check-scope" onchange="toggleValidationCheck('scope')" class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+                                    <span class="text-[9px] font-bold text-slate-400">¿Alcance Validado?</span>
+                                </label>
+                            </div>
+                            <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+                                <p id="inspect-scope" class="font-medium">Alcance...</p>
+                                <div class="bg-slate-950/70 p-2.5 rounded border border-dashed border-amber-500/30 text-[11px] text-amber-300/90 italic">
+                                    "La definición de límites operativos y responsabilidades formales queda sujeta a la validación del Subdirector de Desarrollo Organizacional."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Block: Inputs & Outputs + Workshop Notes (Width: 5/12) -->
+                    <div class="lg:col-span-5 space-y-5">
+                        
+                        <!-- Inputs & Outputs discussion container -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                            <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                                <div class="flex items-center justify-between mb-2 pb-1 border-b border-slate-900">
+                                    <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">📥 Entradas Propuestas</h5>
+                                    <label class="inline-flex items-center gap-1 cursor-pointer">
+                                        <input type="checkbox" id="check-inputs" onchange="toggleValidationCheck('inputs')" class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+                                        <span class="text-[9px] text-slate-500">¿Val?</span>
+                                    </label>
+                                </div>
+                                <ul id="inspect-inputs" class="text-xs text-slate-300 space-y-1.5"></ul>
+                            </div>
+
+                            <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                                <div class="flex items-center justify-between mb-2 pb-1 border-b border-slate-900">
+                                    <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">📤 Salidas Propuestas</h5>
+                                    <label class="inline-flex items-center gap-1 cursor-pointer">
+                                        <input type="checkbox" id="check-outputs" onchange="toggleValidationCheck('outputs')" class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+                                        <span class="text-[9px] text-slate-500">¿Val?</span>
+                                    </label>
+                                </div>
+                                <ul id="inspect-outputs" class="text-xs text-slate-300 space-y-1.5"></ul>
+                            </div>
+                        </div>
+
+                        <!-- LIVE MEETING NOTES WRITER -->
+                        <div class="bg-slate-950/70 p-4 rounded-xl border border-slate-800 shadow-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <h5 class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    ✍️ Acuerdos y Notas con el Subdirector
+                                </h5>
+                                <span class="text-[9px] text-slate-500 font-medium">Se almacena en vivo</span>
+                            </div>
+                            <textarea id="meeting-notes-area" rows="3" oninput="saveCurrentNodeNotes()" placeholder="Escribe aquí los comentarios del subdirector, ajustes en entradas/salidas o cambios en el alcance durante la reunión..." class="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
+                            <div class="flex justify-between items-center mt-2 text-[10px]">
+                                <span id="save-status-indicator" class="text-emerald-400 flex items-center gap-1 opacity-0 transition-opacity">
+                                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> Cambios guardados
+                                </span>
+                                <button onclick="clearCurrentNotes()" class="text-slate-500 hover:text-rose-400 transition">Borrar notas de este nodo</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 Subdirección de Desarrollo Organizacional. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Interactive Logic & SVG Engine -->
+    <script>
+        // Database of Node details for the Inspector
+        const nodesDb = {
+            'subdireccion': {
+                name: "Subdirección de Desarrollo Organizacional (D.O.)",
+                type: "Mando Directivo Superior",
+                badge: "SUBDIRECCIÓN",
+                badgeClass: "bg-indigo-500/10 text-indigo-400 border-indigo-500/35",
+                caracterizacion: "Lidera las directrices, diseño de capacidades de personal, estructuras formales de cargos y planes estratégicos organizacionales de toda la organización.",
+                articulacion: "Gobierna y orquesta los esfuerzos transversales de los frentes de Transformación Empresarial Digital (TED), Innovación (INN), Procesos (PRO) y Gestión Humana (G.H.)",
+                alcance: "[VALIDAR CON SUBDIRECTOR] Dirección estratégica de todas las dependencias organizacionales de apoyo y misionales. Se validará si liderará directamente la relación con sindicatos o mesas de concertación laboral.",
+                inputs: ["• Directrices estratégicas de Junta/Presidencia", "• Normativa nacional reguladora laboral"],
+                outputs: ["• Estructura Organizacional Oficial Aprobada", "• Resoluciones y Manuales de Funciones Globales"]
+            },
+            'ted': {
+                name: "Transformación Empresarial Digital (TED)",
+                type: "Equipo Habilitador Tecnológico",
+                badge: "TED",
+                badgeClass: "bg-indigo-500/10 text-indigo-400 border-indigo-500/35",
+                caracterizacion: "Lidera la evolución digital de la subdirección y la organización, estructurando canales modernos en la nube, automatizaciones de trámites internos e infraestructuras ágiles.",
+                articulacion: "Trabaja en sinergia directa con PRO para cuantificar el impacto de los sistemas digitales sobre las cargas de trabajo de las áreas, y con G.H. para preparar planes de capacitación técnica de colaboradores.",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Abarcará la digitalización de procesos estratégicos, metodologías ágiles en la nube y gestión del cambio tecnológico. Se debe validar si incluye soporte técnico directo de infraestructura o si esto pertenece a la Oficina de TI de la entidad.",
+                inputs: [
+                    "• Inventario de software y herramientas de la entidad",
+                    "• Solicitudes de digitalización de procedimientos",
+                    "• Plan de desarrollo tecnológico estratégico"
+                ],
+                outputs: [
+                    "• Repositorio digital de procesos críticos organizacionales",
+                    "• Plan estratégico de modernización y capacitación digital",
+                    "• Protocolo de metodologías ágiles aplicado a la D.O."
+                ]
+            },
+            'ted-conocimiento': {
+                name: "Gestión del Conocimiento (TED)",
+                type: "Subproceso Técnico Documental",
+                badge: "EJE ①",
+                badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/35",
+                caracterizacion: "Salvaguarda y estructura el saber-hacer crítico de la entidad para asegurar la continuidad de la operación ante rotaciones.",
+                articulacion: "Provee a G.H. los manuales listos para planes de entrenamiento.",
+                alcance: "Se definirá el método para almacenar lecciones aprendidas de cargos directivos.",
+                inputs: ["• Experiencia técnica de funcionarios próximos a retiro"],
+                outputs: ["• Biblioteca digital de lecciones aprendidas", "• Guías de transferencia"]
+            },
+            'ted-cultura': {
+                name: "Cultura Digital (TED)",
+                type: "Subproceso de Sensibilización",
+                badge: "CULTURA",
+                badgeClass: "bg-indigo-500/10 text-indigo-400 border-indigo-500/25",
+                caracterizacion: "Promueve la adopción y alfabetización digital en todos los niveles, reduciendo la brecha tecnológica laboral.",
+                articulacion: "Colabora con los programas de bienestar y capacitación de G.H.",
+                alcance: "Evaluar planes de formación en competencias digitales.",
+                inputs: ["• Índices de analfabetismo digital interno"],
+                outputs: ["• Talleres de adopción tecnológica", "• Webinars instructivos"]
+            },
+            'ted-experiencia': {
+                name: "Experiencia de Cliente e Interna (TED)",
+                type: "Subproceso de Mapeo de Flujo",
+                badge: "EJE ③",
+                badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/25",
+                caracterizacion: "Diseña canales amables e intuitivos de interacción interna para mejorar el clima y desempeño digital.",
+                articulacion: "Co-diseña rutas de usuario en conjunto con INN.",
+                alcance: "Establecer si abarca automatización de portales internos de auto-reporte.",
+                inputs: ["• Diagnósticos de fricción transaccional"],
+                outputs: ["• Rediseño de portales de servicios compartidos"]
+            },
+            'ted-agiles': {
+                name: "Metodologías Ágiles (TED)",
+                type: "Subproceso de Gestión de Marcos",
+                badge: "EJE ⑤",
+                badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/25",
+                caracterizacion: "Inculca marcos de desarrollo rápido (Scrum, Lean, Kanban) para agilizar entregas organizacionales.",
+                articulacion: "Habilita marcos de trabajo usados por las células creativas de INN.",
+                alcance: "Validar si se certificarán Scrum Masters dentro de los equipos de D.O.",
+                inputs: ["• Retrasos en tiempos de aprobación y entregas operativas"],
+                outputs: ["• Tableros de control de sprints", "• Guía metodológica ágil"]
+            },
+            'ted-cambio': {
+                name: "Gestión del Cambio (TED)",
+                type: "Subproceso de Transición Cultural",
+                badge: "EJE ⑥",
+                badgeClass: "bg-orange-500/10 text-orange-400 border-orange-500/25",
+                caracterizacion: "Acompaña a las áreas intervenidas mediante sensibilizaciones para disminuir la resistencia al cambio procedimental o tecnológico.",
+                articulacion: "Mitiga la resistencia laboral que reporta PRO al optimizar cargos.",
+                alcance: "Estructurar planes de mitigación de impacto laboral en procesos masivos.",
+                inputs: ["• Informes técnicos de cargas de PRO", "• Análisis de clima de G.H."],
+                outputs: ["• Plan preventivo de sensibilización ante despidos/traslados"]
+            },
+            'ted-cloud': {
+                name: "Estrategia Cloud (TED)",
+                type: "Subproceso de Infraestructura",
+                badge: "EJE ③",
+                badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/25",
+                caracterizacion: "Garantiza el soporte, almacenamiento digital centralizado y velocidad de las herramientas interconectadas de la subdirección.",
+                articulacion: "Habilita la base tecnológica del software de cargas de PRO y analítica de G.H.",
+                alcance: "Validar si la adquisición de servidores en la nube es potestad de D.O.",
+                inputs: ["• Requerimientos de velocidad y almacenamiento de sistemas"],
+                outputs: ["• Entorno en la nube integrado para la subdirección"]
+            },
+            'inn': {
+                name: "Innovación y Co-creación (INN)",
+                type: "Equipo de Codiseño Creativo",
+                badge: "INN",
+                badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/35",
+                caracterizacion: "Facilita laboratorios y espacios participativos aplicando metodologías creativas (Design Thinking, Co-diseño) para rediseñar dinámicas del negocio y validar hipótesis de mejora directamente en el sitio de operación.",
+                articulacion: "Sincroniza directamente con TED para incorporar plataformas digitales de ideación, y con PRO para asegurar que las innovaciones propuestas se puedan medir técnicamente en términos de tiempos operacionales.",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Facilitar la ideación, co-diseño y testeo ágil con equipos focales directamente en las dependencias operativas de la organización. Se propone validar con el subdirector si este alcance concluye al entregar el prototipo conceptual o si acompaña la fase de implementación.",
+                inputs: [
+                    "• Diagnósticos de fricción (Rutas de Usuario)",
+                    "• Solicitudes de innovación de servicios por dependencias",
+                    "• Evaluaciones previas de impacto operativo (Innpacto)"
+                ],
+                outputs: [
+                    "• Portafolio de iniciativas y soluciones conceptuales validadas",
+                    "• Informes técnicos y prototipos testados en territorio",
+                    "• Plan de sensibilización para la cultura de innovación"
+                ]
+            },
+            'inn-experiencia': {
+                name: "Experiencia CX/EX (INN)",
+                type: "Subproceso de Empatía",
+                badge: "EJE ③",
+                badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/25",
+                caracterizacion: "Construye Journey Maps (Mapas de Ruta) en talleres creativos con empleados y clientes para detectar fricciones.",
+                articulacion: "Insumo técnico clave para que TED rediseñe portales.",
+                alcance: "Validar si se incluye el mapeo de la experiencia física de atención de usuarios.",
+                inputs: ["• Observación de tiempos de espera en oficinas"],
+                outputs: ["• Journey Maps del Colaborador y Usuario final"]
+            },
+            'inn-diseno': {
+                name: "Diseño y Rediseño (INN)",
+                type: "Subproceso Creativo Estructural",
+                badge: "EJE ④",
+                badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/25",
+                caracterizacion: "Plantea de forma gráfica y lúdica modelos disruptivos de operación organizativa libre de restricciones convencionales.",
+                articulacion: "Entrega conceptos lúdicos a PRO para su posterior formalización técnica y normativa.",
+                alcance: "Establecer límites al proponer rediseños de unidades de negocio completas.",
+                inputs: ["• Problemas operativos severos sin solución aparente"],
+                outputs: ["• Dossier de prototipos operacionales creativos"]
+            },
+            'inn-ideacion': {
+                name: "Ideación Estratégica (INN)",
+                type: "Subproceso de Cocreación",
+                badge: "EJE ⑤",
+                badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/25",
+                caracterizacion: "Coordina mesas de co-diseño veloz usando metodologías lúdicas (Lego Serious Play, Lluvia de Ideas estructurada) con personal técnico.",
+                articulacion: "Usa marcos ágiles proporcionados por TED.",
+                alcance: "Definir frecuencia y áreas participantes en laboratorios de co-diseño.",
+                inputs: ["• Convocatorias internas de ideación"],
+                outputs: ["• Portafolio de iniciativas priorizadas para prototipado"]
+            },
+            'inn-cultura': {
+                name: "Cultura de Innovación (INN)",
+                type: "Subproceso de Incentivos",
+                badge: "INNOVACIÓN",
+                badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/25",
+                caracterizacion: "Inculca hábitos de experimentación y tolerancia al fallo en los equipos técnicos de la empresa.",
+                articulacion: "Usa de canal de apoyo los boletines de cultura de G.H.",
+                alcance: "Validar si se premiará económicamente a los empleados con ideas exitosas.",
+                inputs: ["• Barreras culturales de innovación detectadas"],
+                outputs: ["• Programa corporativo de intraemprendimiento"]
+            },
+            'pro': {
+                name: "Procesos, Productividad y Estructura (PRO)",
+                type: "Equipo de Ingeniería de Capacidades",
+                badge: "PRO",
+                badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/35",
+                caracterizacion: "Garantiza la eficiencia interna de la organización mediante estudios cuantitativos de ocupación de puestos, medición de cargas de trabajo de equipos, optimización de procedimientos y el balance de la estructura institucional (C.E.A).",
+                articulacion: "Se articula con G.H. para alimentar técnicamente los planes de carrera y perfiles, y con TED para estructurar indicadores y tableros analíticos de desempeño organizacional.",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Estudiar las capacidades de planta, realizar estudios técnicos de tiempos y movimientos, y modelar la estructura operativa general. Se requiere validar con el subdirector si los procesos misionales complejos están incluidos en esta fase o si iniciaremos con dependencias administrativas y de apoyo.",
+                inputs: [
+                    "• Tiempos operacionales y métricas transaccionales",
+                    "• Solicitudes de modificación de estructuras o plantas",
+                    "• Reportes o alertas de sobrecarga operativa de personal"
+                ],
+                outputs: [
+                    "• Informes Técnicos de Cargas Laborales y Dimensionamiento",
+                    "• Fichas técnicas de procesos críticos optimizados",
+                    "• Modelos analíticos y tableros de control de productividad"
+                ]
+            },
+            'pro-cea': {
+                name: "Alineación C.E.A (PRO)",
+                type: "Subproceso de Arquitectura Organizacional",
+                badge: "EJE ②",
+                badgeClass: "bg-blue-500/10 text-blue-400 border-blue-500/35",
+                caracterizacion: "Diseña organigramas y asignación de alcances para que la estructura (E) se alinee a la cultura (C) y a las metas institucionales (A).",
+                articulacion: "Se integra con TED para reflejar la estructura en sistemas analíticos.",
+                alcance: "Validar si se auditará la jerarquía de filiales externas de la empresa.",
+                inputs: ["• Reestructuración de líneas de reporte organizacionales"],
+                outputs: ["• Organigrama funcional oficial con roles definidos"]
+            },
+            'pro-diseno': {
+                name: "Diseño y Rediseño Técnico (PRO)",
+                type: "Subproceso de Documentación",
+                badge: "EJE ④",
+                badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/25",
+                caracterizacion: "Escribe de forma rigurosa y técnica los manuales de procedimientos y flujos operativos, traduciendo conceptos disruptivos a guías de trabajo rígidas.",
+                articulacion: "Estructura las ideas validadas por INN para que sean normativamente viables.",
+                alcance: "Mapeo bajo estándar internacional (BPMN 2.0).",
+                inputs: ["• Ideas validadas de innovación conceptual"],
+                outputs: ["• Manual de procesos y procedimientos aprobado por control interno"]
+            },
+            'pro-cargas': {
+                name: "Estudio de Cargas Laborales (PRO)",
+                type: "Subproceso de Medición",
+                badge: "EJE ⑥",
+                badgeClass: "bg-orange-500/10 text-orange-400 border-orange-500/25",
+                caracterizacion: "Mide tiempos y movimientos operacionales reales de funcionarios para diagnosticar saturación o subutilización de cargos.",
+                articulacion: "Entrega justificación cuantitativa a G.H. para contrataciones o reducciones.",
+                alcance: "Definir si se usará autodiagnóstico en plataforma o medición directa en campo.",
+                inputs: ["• Horas extra registradas y quejas de sobrecarga"],
+                outputs: ["• Informe técnico final de dimensionamiento de planta"]
+            },
+            'pro-optimizacion': {
+                name: "Optimización de Procedimientos (PRO)",
+                type: "Subproceso de Mejora",
+                badge: "EJE ①",
+                badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
+                caracterizacion: "Racionaliza y simplifica flujos, removiendo actividades manuales obsoletas o burocracia sin valor.",
+                articulacion: "Trabaja con TED para incorporar plataformas que suplanten tareas de digitación.",
+                alcance: "Identificación de tareas candidatas para Automatización Robótica de Procesos (RPA).",
+                inputs: ["• Flujos de procesos con cuellos de botella severos"],
+                outputs: ["• Fichas técnicas de procesos reestructurados y agilizados"]
+            },
+            'gh': {
+                name: "Gestión Humana y Talento (G.H)",
+                type: "Equipo de Operación de Personas",
+                badge: "G.H",
+                badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/35",
+                caracterizacion: "Gestiona de forma estratégica el desarrollo del personal mediante perfiles, planes de capacitación adaptados a la modernización, evaluaciones de desempeño, planes de carrera y la custodia normativa de historias laborales.",
+                articulacion: "Trabaja mano a mano con PRO para recibir la información de cargos y perfiles organizacionales, y con TED para coordinar la digitalización de nóminas, SST y expedientes laborales.",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Abarcar la selección, contratación, nómina, capacitación técnica y seguridad laboral. Es fundamental validar con el subdirector si G.H. definirá directamente las políticas de bienestar y clima laboral o si funcionará bajo una guía ya aprobada.",
+                inputs: [
+                    "• Perfiles de cargos definidos por la organización",
+                    "• Diagnósticos individuales de competencias (Assessments)",
+                    "• Requerimientos legales de capacitación y bienestar"
+                ],
+                outputs: [
+                    "• Manuales de perfiles y programas de inducción/entrenamiento",
+                    "• Plan estratégico de carrera y escalafón laboral",
+                    "• Indicadores analíticos de rotación, clima y desempeño"
+                ]
+            },
+            'gh-seleccion': {
+                name: "Selección y Contratación (G.H)",
+                type: "Subproceso de Onboarding",
+                badge: "TALENTO",
+                badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
+                caracterizacion: "Administra los canales de vacantes, evaluaciones psicológicas y contratación formal bajo cumplimiento de ley.",
+                articulacion: "Recibe de PRO la descripción técnica de vacantes a requerir.",
+                alcance: "Validar si se tercerizará el reclutamiento para cargos gerenciales altos.",
+                inputs: ["• Requerimiento de personal justificado"],
+                outputs: ["• Ficha de ingreso de colaborador", "• Contrato laboral oficial"]
+            },
+            'gh-formacion': {
+                name: "Formación y Capacitación (G.H)",
+                type: "Subproceso de Entrenamiento",
+                badge: "EJE ①",
+                badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
+                caracterizacion: "Organiza planes académicos técnicos internos para cerrar brechas operativas en herramientas informáticas o reglamentos.",
+                articulacion: "Incorpora el material de 'Gestión del Conocimiento' de TED para el re-entrenamiento.",
+                alcance: "Establecer la meta de horas de capacitación anuales por colaborador.",
+                inputs: ["• Matriz de competencias deficientes identificada"],
+                outputs: ["• Plan anual de capacitación técnica institucional"]
+            },
+            'gh-evaluacion': {
+                name: "Evaluación de Desempeño (G.H)",
+                type: "Subproceso de Auditoría de Personal",
+                badge: "PRODUCTIVIDAD",
+                badgeClass: "bg-slate-500/10 text-slate-400 border-slate-500/25",
+                caracterizacion: "Coordina la evaluación periódica de cumplimientos y metas individuales, apoyando la toma de decisiones de ascensos.",
+                articulacion: "Trabaja con PRO para cruzar metas con indicadores procedimentales.",
+                alcance: "Validar si se usará evaluación 360 grados de forma oficial.",
+                inputs: ["• Acuerdos de metas y roles individuales"],
+                outputs: ["• Calificaciones e informes consolidados de desempeño"]
+            },
+            'gh-bienestar': {
+                name: "Bienestar & Seguridad en el Trabajo (G.H)",
+                type: "Subproceso de Salud Ocupacional",
+                badge: "SALUD",
+                badgeClass: "bg-slate-500/10 text-slate-400 border-slate-500/25",
+                caracterizacion: "Garantiza un ambiente laboral óptimo, previniendo accidentes laborales y evaluando de manera preventiva el clima organizacional.",
+                articulacion: "Monitorea riesgos asociados a la sobrecarga que reporta PRO.",
+                alcance: "Definir si se gestionarán seguros de salud médicos privados para personal estratégico.",
+                inputs: ["• Reporte de riesgos y ausentismo laboral"],
+                outputs: ["• Plan de prevención y actividades recreacionales aprobadas"]
+            },
+            'line-1': {
+                name: "Línea ① - Gestión del Conocimiento y Carrera",
+                type: "Línea de Conexión Transversal",
+                badge: "EJE ①",
+                badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/35",
+                caracterizacion: "Captura las capacidades y el saber acumulado de cargos críticos antes de retiros o rotaciones, formalizándolos para habilitar rutas de carrera estables.",
+                articulacion: "Conexión operativa entre TED (Gestión Documental del saber) y G.H (Formación activa de sucesores).",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Definir qué cargos serán catalogados como 'críticos' para iniciar el levantamiento de conocimiento. Se recomienda validar con el subdirector el umbral de prioridad.",
+                inputs: ["• Manuales de procesos existentes", "• Diagnósticos de rotación histórica"],
+                outputs: ["• Planes de carrera documentados", "• Instructivos de cargos críticos formalizados"]
+            },
+            'line-2': {
+                name: "Línea ② - Analítica C.E.A",
+                type: "Línea de Conexión Transversal",
+                badge: "EJE ②",
+                badgeClass: "bg-blue-500/10 text-blue-400 border-blue-500/35",
+                caracterizacion: "Modelado matemático que cruza datos analíticos de personal con evaluaciones estructurales para decisiones de planta inteligente.",
+                articulacion: "Articulación entre TED (Ciencia de datos) y PRO (Medición de capacidades y planta).",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Modelación analítica enfocada únicamente en la optimización de planta. Validar si los directivos participarán directamente en el diseño de tableros.",
+                inputs: ["• Datos de nómina e historias de desempeño", "• Pruebas de competencias (Assessments)"],
+                outputs: ["• Tableros de modelado predictivo de personal"]
+            },
+            'line-3': {
+                name: "Línea ③ - Experiencia de Cliente & Empleado",
+                type: "Línea de Conexión Transversal",
+                badge: "EJE ③",
+                badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/35",
+                caracterizacion: "Mapeo empático y diagramación de trayectorias (User journeys) para simplificar procesos y mejorar el clima interno.",
+                articulacion: "Une los laboratorios de co-creación de INN con la habilitación ágil tecnológica de TED.",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Se propone mapear las 3 rutas críticas de usuarios este año. Validar con el subdirector si se incluirán trámites externos de ciudadanos.",
+                inputs: ["• Quejas y reclamos de tiempos de atención", "• Diagnósticos de clima laboral"],
+                outputs: ["• Journey Maps (Mapas de Ruta) oficiales aprobados"]
+            },
+            'line-4': {
+                name: "Línea ④ - Rediseño de Modelos de Negocio",
+                type: "Línea de Conexión Transversal",
+                badge: "EJE ④",
+                badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/35",
+                caracterizacion: "Eje de rediseño estructural ante grandes cambios corporativos, fusionando análisis técnico, tecnológico y creatividad.",
+                articulacion: "Sinergia en tres bandas: TED (Digitalización) + INN (Cocreación de negocio) + PRO (Estructuración de procesos).",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Reconfiguración y transición de áreas operativas estratégicas. Validar con el subdirector el nivel de involucramiento de consultores externos.",
+                inputs: ["• Planes operativos anuales de la alta gerencia", "• Solicitudes formales de rediseño de negocio"],
+                outputs: ["• Carpeta integral de rediseño técnico", "• Planes de acción y despliegue"]
+            },
+            'line-5': {
+                name: "Línea ⑤ - Innovación, Cocreación y Agilidad",
+                type: "Línea de Conexión Transversal",
+                badge: "EJE ⑤",
+                badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/35",
+                caracterizacion: "Habilita que los grupos operativos propongan y testen metodologías ágiles ágilmente reduciendo reprocesos cotidianos.",
+                articulacion: "Conecta a TED (Habilitación Scrum / marcos) con INN (Talles focales de co-diseño).",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Implementar 2 pilotos ágiles para dependencias críticas en 60 días. Validar factibilidad metodológica con el subdirector.",
+                inputs: ["• Problemas recurrentes reportados por personal", "• Necesidades de co-creación internas"],
+                outputs: ["• Portafolio de propuestas de solución documentadas"]
+            },
+            'line-6': {
+                name: "Línea ⑥ - Eficiencia y Cargas Laborales",
+                type: "Línea de Conexión Transversal",
+                badge: "EJE ⑥",
+                badgeClass: "bg-orange-500/10 text-orange-400 border-orange-500/35",
+                caracterizacion: "Dimensionamiento justo de planta coordinando la medición técnica con talleres humanos de adopción del cambio.",
+                articulacion: "Conexión directa entre PRO (Estudios de Cargas) y TED (Estrategia y resguardo de la Gestión del Cambio).",
+                alcance: "[PROPUESTA DE ALCANCE POR VALIDAR] Mediciones del 100% de la planta administrativa en el trimestre actual. Validar si se aplicará auto-reporte digital o mediciones externas directas.",
+                inputs: ["• Articulación neuronal de áreas", "• Estadísticas de sobrecarga y tiempos de entrega"],
+                outputs: ["• Informes técnicos de cargas autorizados por D.O.", "• Planes de gestión del cambio aplicados"]
+            }
+        };
+
+        // State to keep track of active node collapsible status (Mindmap)
+        const activeNodes = {
+            'ted': false,
+            'inn': false,
+            'pro': false,
+            'gh': false,
+            'line-1': false,
+            'line-2': false,
+            'line-3': false,
+            'line-4': false,
+            'line-5': false,
+            'line-6': false
+        };
+
+        // Current Active View Mode
+        let currentView = 'mindmap';
+
+        // State to preserve meeting notes and individual validation status across nodes in-memory
+        const workshopState = {};
+
+        // Initialize state for ALL nodes including sub-nodes
+        Object.keys(nodesDb).forEach(key => {
+            workshopState[key] = {
+                notes: "",
+                scopeValid: false,
+                inputsValid: false,
+                outputsValid: false
+            };
+        });
+
+        // DOM elements references
+        const svgContainer = document.getElementById('svg-paths-container');
+        const searchInput = document.getElementById('searchBar');
+
+        // Toggle Expand/Collapse Node (Mindmap view)
+        function toggleNode(nodeId) {
+            activeNodes[nodeId] = !activeNodes[nodeId];
+            
+            const subElement = document.getElementById(`sub-${nodeId}`);
+            const arrowElement = document.getElementById(`arrow-${nodeId}`);
+            const cardElement = document.getElementById(`card-${nodeId}`);
+
+            if (activeNodes[nodeId]) {
+                if(subElement) subElement.classList.add('open');
+                if(arrowElement) arrowElement.classList.add('rotate-180');
+                if(cardElement) cardElement.classList.add('ring-2', 'ring-indigo-500/30');
+            } else {
+                if(subElement) subElement.classList.remove('open');
+                if(arrowElement) arrowElement.classList.remove('rotate-180');
+                if(cardElement) cardElement.classList.remove('ring-2', 'ring-indigo-500/30');
+            }
+
+            // Inspect Node details
+            inspectNode(nodeId);
+
+            // Animate lines during transition height change (if in Mindmap view)
+            if (currentView === 'mindmap') {
+                let frames = 0;
+                const animateLines = () => {
+                    drawConnections();
+                    frames++;
+                    if (frames < 20) {
+                        requestAnimationFrame(animateLines);
+                    }
+                };
+                requestAnimationFrame(animateLines);
+            }
+        }
+
+        // View Switcher Engine
+        function switchView(viewName) {
+            currentView = viewName;
+            
+            const mindmapView = document.getElementById('view-mindmap');
+            const organigramaView = document.getElementById('view-organigrama');
+            
+            const tabMindmap = document.getElementById('tab-mindmap');
+            const tabOrganigrama = document.getElementById('tab-organigrama');
+
+            if (viewName === 'mindmap') {
+                // Adjust views
+                mindmapView.classList.remove('hidden');
+                mindmapView.classList.add('grid');
+                organigramaView.classList.add('hidden');
+                organigramaView.classList.remove('flex');
+
+                // Adjust tab buttons
+                tabMindmap.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow";
+                tabOrganigrama.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200";
+                
+                // Redraw SVG connections on next frame
+                requestAnimationFrame(drawConnections);
+            } else {
+                // Adjust views
+                mindmapView.classList.add('hidden');
+                mindmapView.classList.remove('grid');
+                organigramaView.classList.remove('hidden');
+                organigramaView.classList.add('flex');
+
+                // Adjust tab buttons
+                tabMindmap.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200";
+                tabOrganigrama.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow";
+            }
+        }
+
+        // Expand All (Mindmap View)
+        function expandAll() {
+            Object.keys(activeNodes).forEach(id => {
+                activeNodes[id] = true;
+                const sub = document.getElementById(`sub-${id}`);
+                const arrow = document.getElementById(`arrow-${id}`);
+                const card = document.getElementById(`card-${id}`);
+                if(sub) sub.classList.add('open');
+                if(arrow) arrow.classList.add('rotate-180');
+                if(card) card.classList.add('ring-2', 'ring-indigo-500/30');
+            });
+            if (currentView === 'mindmap') drawConnections();
+        }
+
+        // Collapse All (Mindmap View)
+        function collapseAll() {
+            Object.keys(activeNodes).forEach(id => {
+                activeNodes[id] = false;
+                const sub = document.getElementById(`sub-${id}`);
+                const arrow = document.getElementById(`arrow-${id}`);
+                const card = document.getElementById(`card-${id}`);
+                if(sub) sub.classList.remove('open');
+                if(arrow) arrow.classList.remove('rotate-180');
+                if(card) card.classList.remove('ring-2', 'ring-indigo-500/30');
+            });
+            if (currentView === 'mindmap') drawConnections();
+        }
+
+        // Current active node in inspector
+        let currentInspectedNodeId = null;
+
+        // Show Details in Inspector Panel
+        function inspectNode(nodeId) {
+            currentInspectedNodeId = nodeId;
+            const data = nodesDb[nodeId];
+            const state = workshopState[nodeId];
+            if (!data) return;
+
+            document.getElementById('inspector-placeholder').classList.add('hidden');
+            const content = document.getElementById('inspector-content');
+            content.classList.remove('hidden');
+
+            const badge = document.getElementById('inspect-badge');
+            badge.className = `px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${data.badgeClass}`;
+            badge.innerText = data.badge;
+
+            document.getElementById('inspect-name').innerText = data.name;
+            document.getElementById('inspect-type').innerText = data.type;
+            
+            // Populating structural fields
+            document.getElementById('inspect-carac').innerText = data.caracterizacion;
+            document.getElementById('inspect-artic').innerText = data.articulacion;
+            document.getElementById('inspect-scope').innerText = data.alcance;
+
+            // Inputs list
+            const inputsList = document.getElementById('inspect-inputs');
+            inputsList.innerHTML = '';
+            data.inputs.forEach(i => {
+                const li = document.createElement('li');
+                li.className = "py-1 border-b border-slate-900/40 last:border-0";
+                li.innerText = i;
+                inputsList.appendChild(li);
+            });
+
+            // Outputs list
+            const outputsList = document.getElementById('inspect-outputs');
+            outputsList.innerHTML = '';
+            data.outputs.forEach(o => {
+                const li = document.createElement('li');
+                li.className = "py-1 border-b border-slate-900/40 last:border-0 text-slate-300";
+                li.innerText = o;
+                outputsList.appendChild(li);
+            });
+
+            // Set Checkboxes and notes according to stored workshop state
+            document.getElementById('check-scope').checked = state.scopeValid;
+            document.getElementById('check-inputs').checked = state.inputsValid;
+            document.getElementById('check-outputs').checked = state.outputsValid;
+            document.getElementById('meeting-notes-area').value = state.notes;
+
+            updateBadgeStatus(nodeId);
+
+            // Smooth scroll inspector into view on smaller displays if clicked from diagram
+            const rect = document.getElementById('inspector-panel').getBoundingClientRect();
+            if (rect.top > window.innerHeight) {
+                document.getElementById('inspector-panel').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Handle Interactive validations
+        function toggleValidationCheck(type) {
+            if (!currentInspectedNodeId) return;
+            const state = workshopState[currentInspectedNodeId];
+            
+            if (type === 'scope') {
+                state.scopeValid = document.getElementById('check-scope').checked;
+            } else if (type === 'inputs') {
+                state.inputsValid = document.getElementById('check-inputs').checked;
+            } else if (type === 'outputs') {
+                state.outputsValid = document.getElementById('check-outputs').checked;
+            }
+
+            updateBadgeStatus(currentInspectedNodeId);
+            showSavedIndicator();
+        }
+
+        // Live notes updating
+        function saveCurrentNodeNotes() {
+            if (!currentInspectedNodeId) return;
+            const textValue = document.getElementById('meeting-notes-area').value;
+            workshopState[currentInspectedNodeId].notes = textValue;
+            showSavedIndicator();
+        }
+
+        // Live visual indicator for automated saves
+        let saveTimeout = null;
+        function showSavedIndicator() {
+            const indicator = document.getElementById('save-status-indicator');
+            indicator.style.opacity = '1';
+            
+            if (saveTimeout) clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 1200);
+        }
+
+        function clearCurrentNotes() {
+            if (!currentInspectedNodeId) return;
+            document.getElementById('meeting-notes-area').value = '';
+            workshopState[currentInspectedNodeId].notes = '';
+            showSavedIndicator();
+        }
+
+        // Dynamically update the status indicator badges
+        function updateBadgeStatus(nodeId) {
+            const state = workshopState[nodeId];
+            const badge = document.getElementById('global-validation-badge');
+            
+            const checksCount = [state.scopeValid, state.inputsValid, state.outputsValid].filter(Boolean).length;
+            
+            if (checksCount === 3) {
+                badge.className = "px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ✓ Validado por Subdirector`;
+            } else if (checksCount > 0) {
+                badge.className = "px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-bold text-indigo-400 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Validación Parcial (${checksCount}/3)`;
+            } else {
+                badge.className = "px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-[10px] font-bold text-amber-400 flex items-center gap-1.5 animate-pulse";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Estado: Pendiente de Validación`;
+            }
+        }
+
+        // DRAW SVG CONNECTION PATHS (Only for Red de Nodos View)
+        function drawConnections() {
+            if (currentView !== 'mindmap' || window.innerWidth < 1024) {
+                svgContainer.innerHTML = '';
+                return;
+            }
+
+            const core = document.getElementById('core-node');
+            const svg = document.getElementById('connections-svg');
+            
+            if (!core || !svg) return;
+
+            const svgRect = svg.getBoundingClientRect();
+            const coreRect = core.getBoundingClientRect();
+            
+            const coreCenter = {
+                x: coreRect.left + coreRect.width / 2 - svgRect.left,
+                y: coreRect.top + coreRect.height / 2 - svgRect.top
+            };
+
+            let pathsHtml = '';
+
+            // Left Nodes to Core
+            const leftNodes = [
+                { id: 'card-ted', grad: 'grad-indigo', stroke: '#6366f1' },
+                { id: 'card-inn', grad: 'grad-purple', stroke: '#a855f7' },
+                { id: 'card-pro', grad: 'grad-amber', stroke: '#f59e0b' },
+                { id: 'card-gh', grad: 'grad-emerald', stroke: '#10b881' }
+            ];
+
+            leftNodes.forEach(node => {
+                const elem = document.getElementById(node.id);
+                if (elem) {
+                    const rect = elem.getBoundingClientRect();
+                    const endPoint = {
+                        x: rect.right - svgRect.left,
+                        y: rect.top + rect.height / 2 - svgRect.top
+                    };
+                    
+                    const cp1x = coreCenter.x - 100;
+                    const cp2x = endPoint.x + 60;
+                    
+                    pathsHtml += `
+                        <path d="M ${coreCenter.x} ${coreCenter.y} C ${cp1x} ${coreCenter.y}, ${cp2x} ${endPoint.y}, ${endPoint.x} ${endPoint.y}" 
+                              fill="none" 
+                              stroke="${node.stroke}" 
+                              stroke-opacity="0.3" 
+                              stroke-width="2" />
+                        <path d="M ${coreCenter.x} ${coreCenter.y} C ${cp1x} ${coreCenter.y}, ${cp2x} ${endPoint.y}, ${endPoint.x} ${endPoint.y}" 
+                              fill="none" 
+                              stroke="url(#${node.grad})" 
+                              stroke-width="2.5" 
+                              class="connection-flow" 
+                              stroke-opacity="0.85" />
+                        <circle cx="${endPoint.x}" cy="${endPoint.y}" r="4" fill="${node.stroke}" />
+                    `;
+                }
+            });
+
+            svgContainer.innerHTML = pathsHtml;
+        }
+
+        // Global search & filtering
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+
+            Object.keys(nodesDb).forEach(key => {
+                const card = document.getElementById(`card-${key}`);
+                if (!card) return;
+
+                const nodeData = nodesDb[key];
+                const textToSearch = `${nodeData.name} ${nodeData.caracterizacion} ${nodeData.articulacion} ${nodeData.alcance}`.toLowerCase();
+
+                if (textToSearch.includes(query)) {
+                    card.style.opacity = "1";
+                    card.classList.add('scale-[1.02]');
+                } else {
+                    card.style.opacity = "0.3";
+                    card.classList.remove('scale-[1.02]');
+                }
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            if(currentView === 'mindmap') drawConnections();
+        });
+        
+        window.addEventListener('load', () => {
+            drawConnections();
+            inspectNode('subdireccion'); // Default selection
+        });
+
+        setTimeout(drawConnections, 350);
+    </script>
+</body>
+</html>
