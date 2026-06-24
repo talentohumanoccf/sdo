@@ -258,7 +258,7 @@
                 </a>
                 <button onclick="openFase1Reference()" class="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 shadow-md hover:scale-105 active:scale-95">
                     <i data-lucide="book-open" class="w-4 h-4"></i>
-                    <span>Ecosistema TED (Fase I)</span>
+                    <span>Ecosistema SDO (Referencia)</span>
                 </button>
             </div>
         </div>
@@ -269,7 +269,7 @@
         <header class="sticky top-0 left-0 w-full p-6 flex justify-between items-center z-[310] bg-slate-950/80 backdrop-blur-md border-b border-white/10">
             <div class="flex items-center gap-4 text-white">
                 <i data-lucide="book-open" class="w-6 h-6 text-amber-500"></i>
-                <h3 class="text-xl font-black uppercase tracking-tight">Marco de Referencia - Fase I</h3>
+                <h3 class="text-xl font-black uppercase tracking-tight">Marco de Referencia - Ecosistema SDO</h3>
             </div>
             <button onclick="closeFase1Reference()" class="p-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 border border-white/10">
                 <i data-lucide="x" class="w-5 h-5"></i>
@@ -281,7 +281,7 @@
             <div class="flex justify-center border-b border-slate-800 pb-4">
                 <div class="flex bg-slate-900 p-1.5 rounded-2xl border border-slate-800">
                     <button onclick="switchRefTab('ted')" id="reftab-ted" class="px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all">
-                        Ecosistema TED
+                        Ecosistema SDO
                     </button>
                     <button onclick="switchRefTab('justificacion')" id="reftab-justificacion" class="px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all">
                         Justificación y PMO
@@ -292,9 +292,9 @@
             <!-- Content: Tab TED -->
             <div id="refcontent-ted" class="space-y-8 animate-fade-in">
                 <div class="text-center max-w-2xl mx-auto space-y-2">
-                    <h4 class="text-2xl font-black text-white uppercase tracking-tight">Ecosistema Metodológico TED</h4>
+                    <h4 class="text-2xl font-black text-white uppercase tracking-tight">Ecosistema Metodológico SDO</h4>
                     <p class="text-sm text-slate-400">
-                        La convergencia de Tecnología, Estrategia y Desempeño actúa como el motor central que automatiza la operación y alinea el talento humano.
+                        La convergencia de Tecnología, Estrategia y Desempeño orquesta los frentes clave de personal, co-diseño e ingeniería organizativa.
                     </p>
                 </div>
                 
@@ -310,9 +310,13 @@
                             <div class="p-4 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex-shrink-0">
                                 <i data-lucide="monitor" class="w-8 h-8"></i>
                             </div>
-                            <div class="text-left space-y-1">
+                            <div class="text-left space-y-1.5 flex-grow">
                                 <h4 class="text-lg font-black text-white uppercase tracking-wide">Tecnología</h4>
-                                <p class="text-xs text-slate-400 leading-relaxed">Automatización de tareas repetitivas.</p>
+                                <p class="text-xs text-slate-400 leading-normal">Automatización de tareas repetitivas.</p>
+                                <div class="flex items-center gap-1.5 mt-2.5 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20 w-fit">
+                                    <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></span>
+                                    <span class="text-[9px] font-black text-indigo-300 uppercase tracking-wider">Cx: Experiencia de Cliente</span>
+                                </div>
                             </div>
                         </div>
                         
@@ -321,9 +325,19 @@
                             <div class="p-4 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex-shrink-0">
                                 <i data-lucide="compass" class="w-8 h-8"></i>
                             </div>
-                            <div class="text-left space-y-1">
+                            <div class="text-left space-y-1.5 flex-grow">
                                 <h4 class="text-lg font-black text-white uppercase tracking-wide">Estrategia</h4>
-                                <p class="text-xs text-slate-400 leading-relaxed">Alineación de objetivos institucionales.</p>
+                                <p class="text-xs text-slate-400 leading-normal">Alineación de objetivos institucionales.</p>
+                                <div class="flex flex-wrap gap-1.5 mt-2.5">
+                                    <div class="flex items-center gap-1.5 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 w-fit">
+                                        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
+                                        <span class="text-[9px] font-black text-amber-300 uppercase tracking-wider">Innovación</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 w-fit">
+                                        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
+                                        <span class="text-[9px] font-black text-amber-300 uppercase tracking-wider">Relacionamiento</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -332,14 +346,18 @@
                             <div class="p-4 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex-shrink-0">
                                 <i data-lucide="bar-chart-3" class="w-8 h-8"></i>
                             </div>
-                            <div class="text-left space-y-1">
+                            <div class="text-left space-y-1.5 flex-grow">
                                 <h4 class="text-lg font-black text-white uppercase tracking-wide">Desempeño</h4>
-                                <p class="text-xs text-slate-400 leading-relaxed">Resultados de alta productividad.</p>
+                                <p class="text-xs text-slate-400 leading-normal">Resultados de alta productividad.</p>
+                                <div class="flex items-center gap-1.5 mt-2.5 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 w-fit">
+                                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                                    <span class="text-[9px] font-black text-emerald-300 uppercase tracking-wider">Productividad Analítica</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Right Side: Dashed Circle with Inner Circle "TED" -->
+                    <!-- Right Side: Dashed Circle with Inner Circle "SDO" -->
                     <div class="md:col-span-6 flex flex-col items-center justify-center relative z-10">
                         <div id="pillar-card-ted" onclick="selectPillar('ted')" class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center cursor-pointer hover:scale-[1.03] transition-all duration-300 rounded-full">
                             <!-- Outer Dashed Circle -->
@@ -350,8 +368,8 @@
                             
                             <!-- Inner Circle -->
                             <div class="absolute inset-6 rounded-full bg-[#080b11] border-2 border-slate-800 flex flex-col items-center justify-center p-6 text-center shadow-2xl">
-                                <div class="text-6xl font-black text-amber-500 tracking-tighter leading-none mb-1">TED</div>
-                                <div class="text-[9px] uppercase font-black tracking-[0.25em] text-[#64748b]">Ecosistema 2026</div>
+                                <div class="text-6xl font-black text-amber-500 tracking-tighter leading-none mb-1">SDO</div>
+                                <div class="text-[9px] uppercase font-black tracking-[0.25em] text-[#64748b] text-center leading-tight">Ecosistema Metodológico</div>
                             </div>
                         </div>
                     </div>
@@ -361,7 +379,7 @@
                 <div id="ted-pillar-details-panel" class="bg-slate-900/40 border border-slate-800/80 p-6 rounded-[2.5rem] transition-all duration-300 relative shadow-lg min-h-[160px] flex flex-col justify-center">
                     <div id="ted-pillar-placeholder" class="text-center py-6 text-slate-500 text-xs">
                         <i data-lucide="info" class="w-6 h-6 mx-auto mb-2 text-indigo-400/60 animate-pulse"></i>
-                        <span>Haz clic sobre Tecnología, Estrategia, Desempeño o el núcleo TED en el gráfico para visualizar su conexión de valor con la Fase II.</span>
+                        <span>Haz clic sobre Tecnología, Estrategia, Desempeño o el núcleo SDO en el gráfico para visualizar su conexión de valor con la Fase II.</span>
                     </div>
                     <div id="ted-pillar-active-content" class="hidden animate-fade-in space-y-4">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-850 pb-3">
@@ -2339,34 +2357,34 @@ const nodesDb = {
 
     const referencePillarsDb = {
         'tecnologia': {
-            title: "Tecnología: Automatización de Tareas Repetitivas",
+            title: "Tecnología: Automatización y Experiencia Humana",
             badge: "PILAR TECNOLÓGICO",
-            subtitle: "Macroproceso T.E.D",
+            subtitle: "Macroproceso T.E.D & Cx",
             icon: "monitor",
             iconClass: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
             borderClass: "border-indigo-500/35 shadow-[0_0_20px_rgba(99,102,241,0.15)]",
             subprocesses: [
-                "<strong>Gestión del Conocimiento:</strong> Resguardo digital del saber-hacer crítico ante rotaciones.",
-                "<strong>Procesos Digitales:</strong> Modelado en la nube y modernización de flujos directivos.",
-                "<strong>Estrategia Cloud:</strong> Almacenamiento centralizado e infraestructura ágil.",
-                "<strong>Cultura Digital:</strong> Formación en automatizaciones básicas y resiliencia tecnológica."
+                "<strong>Cx (Experiencia de Cliente/Empleado):</strong> Diseño del recorrido digital transaccional del usuario.",
+                "<strong>Gestión del Conocimiento:</strong> Biblioteca digital de lecciones aprendidas y transferencia del saber-hacer.",
+                "<strong>Procesos Digitales:</strong> Modelamiento BPMN y migración de flujos directivos a la nube.",
+                "<strong>Cultura Digital:</strong> Adopción de herramientas limpias y automatizaciones básicas."
             ],
-            objective: "Garantizar que el personal apropie las nuevas herramientas en la nube y automatice procesos operativos repetitivos para liberar tiempo de valor."
+            objective: "Garantizar que el personal apropie herramientas Cloud bajo una experiencia digital fluida, eliminando las tareas repetitivas."
         },
         'estrategia': {
-            title: "Estrategia: Alineación de Objetivos Institucionales",
+            title: "Estrategia: Alineación y Cocreación de Valor",
             badge: "PILAR ESTRATÉGICO",
-            subtitle: "Macroproceso INN & SDO",
+            subtitle: "Macroproceso INN, Relacionamiento & SDO",
             icon: "compass",
             iconClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
             borderClass: "border-amber-500/35 shadow-[0_0_20px_rgba(245,158,11,0.15)]",
             subprocesses: [
-                "<strong>Diseño y Rediseño:</strong> Co-creación empática de portafolios y servicios con personal de campo.",
-                "<strong>Ideación y Focus Groups:</strong> Talleres participativos directos con los equipos de operaciones.",
-                "<strong>Cultura de Innovación:</strong> Incentivos y marcos para intraemprendimiento interno.",
-                "<strong>Gobernanza del Cambio:</strong> Monitoreo del impacto cultural en la adopción de nuevas directrices."
+                "<strong>Innovación:</strong> Diseño y rediseño de servicios mediante laboratorios creativos y focus groups.",
+                "<strong>Relacionamiento Empresarial:</strong> Sinergias corporativas y posicionamiento estratégico en el sector.",
+                "<strong>Cultura de Innovación:</strong> Gobernanza de ideas participativas e intraemprendimiento.",
+                "<strong>Gestión del Cambio:</strong> Planes de acción y mitigación del impacto cultural operativo."
             ],
-            objective: "Mitigar la resistencia cultural y asegurar que todo cambio en la estructura organizativa responda a los objetivos misionales de la Caja."
+            objective: "Garantizar la adaptabilidad organizacional y velar porque cada diseño operativo esté perfectamente alineado con los objetivos de la Caja."
         },
         'desempeno': {
             title: "Desempeño: Resultados de Alta Productividad",
@@ -2376,27 +2394,27 @@ const nodesDb = {
             iconClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
             borderClass: "border-emerald-500/35 shadow-[0_0_20px_rgba(16,185,129,0.15)]",
             subprocesses: [
-                "<strong>C.E.A (Centro de Excelencia Analítica):</strong> Modelación estadística y predictiva de planta.",
-                "<strong>Estudio de Ocupación:</strong> Auditoría cuantitativa de cargas y balanceo de cargos.",
-                "<strong>Optimización Procedimental:</strong> Saneamiento de cuellos de botella mediante flujos BPMN.",
-                "<strong>Gestión del Talento (GH):</strong> Ciclo integral del colaborador (selección, nómina, bienestar, SST)."
+                "<strong>Productividad Analítica:</strong> Estudio matemático de cargas de trabajo y ocupación laboral.",
+                "<strong>C.E.A (Centro de Excelencia Analítica):</strong> Inteligencia de datos para balanceo predictivo de planta.",
+                "<strong>Optimización Procedimental:</strong> Racionalización de flujos de negocio y eliminación de reprocesos.",
+                "<strong>Gestión del Talento (GH):</strong> Bienestar, capacitación, SST, salarios y soporte transaccional."
             ],
-            objective: "Establecer capacidades matemáticas de planta y SLAs que garanticen una alta productividad, cuidando la calidad de vida laboral."
+            objective: "Optimizar la capacidad instalada y establecer SLAs medibles que garanticen el alto desempeño, cuidando la calidad de vida de los colaboradores."
         },
         'ted': {
-            title: "Ecosistema TED 2026: Orquestación General",
+            title: "Ecosistema Metodológico SDO: Gobernanza General",
             badge: "NÚCLEO CENTRAL SDO",
-            subtitle: "8 Líneas de Sinergia",
+            subtitle: "Ecosistema Integrado 2026",
             icon: "brain-circuit",
             iconClass: "bg-purple-500/20 text-purple-400 border-purple-500/30",
             borderClass: "border-purple-500/35 shadow-[0_0_20px_rgba(168,85,247,0.15)]",
             subprocesses: [
-                "<strong>Línea ① a Línea ④:</strong> Sinergias entre digitalización, modelos analíticos y cultura de negocio.",
-                "<strong>Línea ⑤ a Línea ⑧:</strong> Enlace entre planes de acción, reingenierías, procesos críticos y sostenibilidad.",
-                "<strong>Integración Neuronal:</strong> Conexión continua entre ingeniería de procesos y gestión humana.",
-                "<strong>Gobernanza CCF:</strong> Monitoreo integral de planta con validación del Subdirector."
+                "<strong>Líneas ① a ⑧ de Sinergia:</strong> Gobernanza y flujos de información bidireccionales en el taller.",
+                "<strong>Orquestación Neuronal:</strong> Conexión entre la ingeniería de procesos (TED/PRO) y las personas (INN/GH).",
+                "<strong>Soporte Transversal PMO:</strong> Éxito metodológico de proyectos con impacto cultural medible.",
+                "<strong>Mesa de Validación Activa:</strong> Toma de acuerdos del Subdirector sobre procesos y alcances."
             ],
-            objective: "Servir como el núcleo metodológico que unifica la tecnología, la estrategia y el desempeño bajo un único tablero de gobernanza institucional."
+            objective: "Consolidar el marco metodológico que unifica la tecnología, la estrategia y el desempeño bajo la rectoría de la SDO."
         }
     };
 
