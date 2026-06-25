@@ -280,11 +280,14 @@
             <!-- Tabs Selector inside Modal -->
             <div class="flex justify-center border-b border-slate-800 pb-4">
                 <div class="flex bg-slate-900 p-1.5 rounded-2xl border border-slate-800">
-                    <button onclick="switchRefTab('ted')" id="reftab-ted" class="px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all">
+                    <button onclick="switchRefTab('ted')" id="reftab-ted" class="px-4 sm:px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all">
                         Ecosistema SDO
                     </button>
-                    <button onclick="switchRefTab('justificacion')" id="reftab-justificacion" class="px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all">
+                    <button onclick="switchRefTab('justificacion')" id="reftab-justificacion" class="px-4 sm:px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all">
                         Justificación y PMO
+                    </button>
+                    <button onclick="switchRefTab('sipoc')" id="reftab-sipoc" class="px-4 sm:px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all">
+                        Caracterización SDO (SIPOC)
                     </button>
                 </div>
             </div>
@@ -453,35 +456,333 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Content: Tab SIPOC (Caracterización Global SDO) -->
+            <div id="refcontent-sipoc" class="space-y-8 animate-fade-in hidden">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h4 class="text-2xl font-black text-white uppercase tracking-tight">Caracterización Global de Procesos (SIPOC)</h4>
+                    <p class="text-sm text-slate-400">
+                        Visualiza los flujos operativos de la SDO. Pasa el cursor o presiona cualquier <strong>Rol Estratégico</strong> al centro para ver la trazabilidad de sus Entradas y Salidas correspondientes.
+                    </p>
+                </div>
+
+                <!-- Main SIPOC Columns Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative z-10 bg-[#090d16]/80 p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+                    <!-- Left Side: ENTRADAS (Col 1 to 3) -->
+                    <div class="lg:col-span-3 space-y-3">
+                        <div class="text-center lg:text-left mb-2 px-2 pb-2 border-b border-slate-800">
+                            <span class="text-[9px] font-black text-[#818cf8] uppercase tracking-[0.2em] block">Insumos Operativos</span>
+                            <h4 class="text-xs font-bold text-slate-300 uppercase">Entradas</h4>
+                        </div>
+                        <div class="flex flex-col gap-2" id="sipoc-inputs-container">
+                            <div id="sipoc-in-planes" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Planes operativos</span>
+                            </div>
+                            <div id="sipoc-in-rutas" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="route" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Rutas de usuario y empleado</span>
+                            </div>
+                            <div id="sipoc-in-conocimiento" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Gestión del conocimiento</span>
+                            </div>
+                            <div id="sipoc-in-diseno" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="layout" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Diseño y rediseño de servicios</span>
+                            </div>
+                            <div id="sipoc-in-ideacion" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Ideación, cocreación y validación</span>
+                            </div>
+                            <div id="sipoc-in-sinergia" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="git-merge" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Sinergia organizacional (Aportes)</span>
+                            </div>
+                            <div id="sipoc-in-assessment" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Assessment</span>
+                            </div>
+                            <div id="sipoc-in-cargas" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Cargas laborales y suficiencias</span>
+                            </div>
+                            <div id="sipoc-in-datos" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Datos</span>
+                            </div>
+                            <div id="sipoc-in-innpacto" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Innpacto</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Section: ROLES ESTRATÉGICOS (Col 4 to 9) -->
+                    <div class="lg:col-span-6 space-y-6 flex flex-col justify-between h-full">
+                        <div class="text-center mb-2 pb-2 border-b border-slate-800">
+                            <span class="text-[9px] font-black text-amber-500 uppercase tracking-[0.2em] block">Procesos Rectores</span>
+                            <h4 class="text-xs font-bold text-slate-300 uppercase">Roles Estratégicos</h4>
+                        </div>
+                        
+                        <!-- 3 Column subgrid for TED, INNOVACIÓN, PRODUCTIVIDAD -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="sipoc-roles-subgrid">
+                            <!-- TED Card -->
+                            <div id="sipoc-role-ted" onmouseenter="highlightSipocRole('ted')" onmouseleave="resetSipocHighlight()" onclick="toggleSipocRole('ted')" class="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-indigo-500/60 transition-all duration-300 text-center flex flex-col justify-between min-h-[220px] cursor-pointer shadow-lg hover:scale-[1.03]">
+                                <div>
+                                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mx-auto mb-3">
+                                        <i data-lucide="monitor" class="w-5 h-5"></i>
+                                    </div>
+                                    <h5 class="text-xs font-black text-white uppercase tracking-wide">TED</h5>
+                                </div>
+                                <ul class="text-[10px] text-slate-400 space-y-1.5 text-left border-t border-slate-800/80 pt-3 mt-3 leading-tight">
+                                    <li>• Gestión conocimiento</li>
+                                    <li>• Cultura digital & Cx</li>
+                                    <li>• Metodologías ágiles</li>
+                                    <li>• Procesos cloud & CEA</li>
+                                </ul>
+                            </div>
+
+                            <!-- INNOVACIÓN Card -->
+                            <div id="sipoc-role-inn" onmouseenter="highlightSipocRole('inn')" onmouseleave="resetSipocHighlight()" onclick="toggleSipocRole('inn')" class="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-blue-500/60 transition-all duration-300 text-center flex flex-col justify-between min-h-[220px] cursor-pointer shadow-lg hover:scale-[1.03]">
+                                <div>
+                                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto mb-3">
+                                        <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                                    </div>
+                                    <h5 class="text-xs font-black text-white uppercase tracking-wide">Innovación</h5>
+                                </div>
+                                <ul class="text-[10px] text-slate-400 space-y-1.5 text-left border-t border-slate-800/80 pt-3 mt-3 leading-tight">
+                                    <li>• Experiencia cliente</li>
+                                    <li>• Codiseño servicios</li>
+                                    <li>• Ideación y cocreación</li>
+                                    <li>• Validación en sitio</li>
+                                </ul>
+                            </div>
+
+                            <!-- PRODUCTIVIDAD Card -->
+                            <div id="sipoc-role-pro" onmouseenter="highlightSipocRole('pro')" onmouseleave="resetSipocHighlight()" onclick="toggleSipocRole('pro')" class="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-purple-500/60 transition-all duration-300 text-center flex flex-col justify-between min-h-[220px] cursor-pointer shadow-lg hover:scale-[1.03]">
+                                <div>
+                                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mx-auto mb-3">
+                                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                                    </div>
+                                    <h5 class="text-xs font-black text-white uppercase tracking-wide">Productividad</h5>
+                                </div>
+                                <ul class="text-[10px] text-slate-400 space-y-1.5 text-left border-t border-slate-800/80 pt-3 mt-3 leading-tight">
+                                    <li>• CEA (Analítica)</li>
+                                    <li>• Análisis de cargas</li>
+                                    <li>• KPIs & Indicadores</li>
+                                    <li>• Ingeniería procesos</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Full width horizontal bar for GESTIÓN HUMANA -->
+                        <div id="sipoc-role-gh" onmouseenter="highlightSipocRole('gh')" onmouseleave="resetSipocHighlight()" onclick="toggleSipocRole('gh')" class="p-4 rounded-2xl border border-slate-800 bg-gradient-to-r from-emerald-950/20 via-slate-900 to-emerald-950/20 hover:border-emerald-500/60 transition-all duration-300 cursor-pointer shadow-md hover:scale-[1.01] relative overflow-hidden">
+                            <!-- Green gradient line at top -->
+                            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500"></div>
+                            
+                            <div class="flex items-center gap-3 mb-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0 flex items-center justify-center">
+                                    <i data-lucide="users" class="w-4 h-4"></i>
+                                </div>
+                                <h5 class="text-xs font-black text-white uppercase tracking-wide">Gestión Humana</h5>
+                                <span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold uppercase ml-auto">Eje Operativo de Sinergias</span>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-slate-400 border-t border-slate-800 pt-2.5">
+                                <div>• Selección & Contrato</div>
+                                <div>• Bienestar & Felicidad</div>
+                                <div>• Formación & SST</div>
+                                <div>• Nómina, Evaluación & SST</div>
+                            </div>
+                        </div>
+
+                        <!-- Sinergia Organizacional Core -->
+                        <div id="sipoc-core-sinergia" class="p-4 rounded-[1.75rem] border border-slate-800/80 bg-slate-950/60 text-center space-y-2.5">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-full text-[9px] font-black uppercase tracking-wider">
+                                <i data-lucide="git-commit" class="w-3 h-3"></i>
+                                Sinergia Organizacional CCF
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left text-[11px] leading-relaxed">
+                                <p class="text-slate-400 pl-3 border-l border-slate-800">
+                                    "Trabajamos de manera transversal y colaborativa, conectando estrategia, personas, tecnología y datos para impulsar la evolución organizacional."
+                                </p>
+                                <p class="text-slate-400 pl-3 border-l border-slate-800">
+                                    "Decisiones informadas, procesos eficientes, personas empoderadas y servicios centrados en la experiencia."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: SALIDAS (Col 10 to 12) -->
+                    <div class="lg:col-span-3 space-y-3">
+                        <div class="text-center lg:text-left mb-2 px-2 pb-2 border-b border-slate-800">
+                            <span class="text-[9px] font-black text-emerald-400 uppercase tracking-[0.2em] block">Entregables de Valor</span>
+                            <h4 class="text-xs font-bold text-slate-300 uppercase">Salidas</h4>
+                        </div>
+                        <div class="flex flex-col gap-2" id="sipoc-outputs-container">
+                            <div id="sipoc-out-carrera" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Plan carrera</span>
+                            </div>
+                            <div id="sipoc-out-documentos" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="folder" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Documentación cargos y críticos</span>
+                            </div>
+                            <div id="sipoc-out-optimizacion" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Optimización de procedimientos</span>
+                            </div>
+                            <div id="sipoc-out-rutas" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="route" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Rutas documentadas</span>
+                            </div>
+                            <div id="sipoc-out-negocio" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Negocio diseñado - Carpeta</span>
+                            </div>
+                            <div id="sipoc-out-propuestas" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Propuestas ideación documentadas</span>
+                            </div>
+                            <div id="sipoc-out-planes" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Planes de acción e intervención</span>
+                            </div>
+                            <div id="sipoc-out-cargas" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Informe final de cargas</span>
+                            </div>
+                            <div id="sipoc-out-modelos" class="p-3 rounded-xl border border-slate-800/80 bg-slate-900/40 text-left text-xs transition duration-200 flex items-center gap-2.5">
+                                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+                                </span>
+                                <span class="text-slate-300 leading-tight">Modelos analíticos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Principles Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 bg-slate-900/30 border border-slate-800 p-5 rounded-[2rem] text-center">
+                    <div class="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-slate-850 bg-slate-950/20">
+                        <i data-lucide="smile" class="w-5 h-5 text-indigo-400"></i>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Enfoque Humano</span>
+                        <p class="text-[9px] text-slate-500">Personas en el centro</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-slate-850 bg-slate-950/20">
+                        <i data-lucide="users-2" class="w-5 h-5 text-blue-400"></i>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Colaboración</span>
+                        <p class="text-[9px] text-slate-500">Talentos integrados</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-slate-850 bg-slate-950/20">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-amber-400"></i>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Innovación</span>
+                        <p class="text-[9px] text-slate-500">Impulsamos ideas</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-slate-850 bg-slate-950/20">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-purple-400"></i>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Productividad</span>
+                        <p class="text-[9px] text-slate-500">Procesos optimizados</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-slate-850 bg-slate-950/20 col-span-2 md:col-span-1">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Sostenibilidad</span>
+                        <p class="text-[9px] text-slate-500">Construimos el futuro</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
         </div>
     </div>
 
     <!-- =========================================================================
-         FASE II: ENTORNO DE TRABAJO ACTIVO (DIAGRAMAS, SINERGIAS, VALIDACIÃ“N)
+         FASE II: ENTORNO DE TRABAJO ACTIVO (DIAGRAMAS, SINERGIAS, VALIDACIÓN)
          ========================================================================= -->
     <section id="pane-fase2" class="max-w-7xl w-full mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col gap-6 z-20 relative">
         <!-- Toolbar interna de Fase II (diagram selectors, etc.) -->
-        <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-900/40 border border-slate-800 p-3 rounded-2xl gap-3">
-            <div class="text-center sm:text-left">
-                <span class="text-[8px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Taller Operativo</span>
-                <p class="text-[11px] text-slate-300 font-medium mt-0.5">Mesa técnica activa con el Subdirector de SDO</p>
+        <div class="flex flex-col lg:flex-row justify-between items-center bg-slate-900/40 border border-slate-800 p-3 rounded-2xl gap-4">
+            <!-- Left part: Vistas (Organigrama / Sinergias) -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                <div class="text-center sm:text-left flex-shrink-0">
+                    <span class="text-[8px] bg-indigo-500/10 text-indigo-400 border-indigo-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Taller Operativo</span>
+                    <p class="text-[11px] text-slate-300 font-medium mt-0.5">Mesa técnica activa</p>
+                </div>
+                <!-- Vista Selector -->
+                <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-850 w-full sm:w-auto justify-center">
+                    <button onclick="switchView('organigrama')" id="subtab-organigrama" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow">
+                        1. Organigrama SDO
+                    </button>
+                    <button onclick="switchView('mindmap')" id="subtab-mindmap" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
+                        2. Red de Sinergias
+                    </button>
+                </div>
             </div>
-            
-            <!-- Vista Selector -->
-            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-850">
-                <button onclick="switchView('mindmap')" id="subtab-mindmap" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow">
-                    Red de Sinergias
+
+            <!-- Middle part: Pillars Filters -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <span class="text-[10px] uppercase font-black text-slate-500 tracking-wider">Filtrar Pilar:</span>
+                <button onclick="filterByStrategicPillar('tecnologia')" id="pillar-btn-tech" class="px-3 py-1 bg-indigo-950/40 hover:bg-indigo-900/40 text-indigo-400 border border-indigo-800/40 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></span> Tecnología
                 </button>
-                <button onclick="switchView('organigrama')" id="subtab-organigrama" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
-                    Organigrama SDO
+                <button onclick="filterByStrategicPillar('estrategia')" id="pillar-btn-strat" class="px-3 py-1 bg-amber-950/40 hover:bg-amber-900/40 text-amber-400 border border-amber-800/40 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span> Estrategia
+                </button>
+                <button onclick="filterByStrategicPillar('desempeno')" id="pillar-btn-perf" class="px-3 py-1 bg-emerald-950/40 hover:bg-emerald-900/40 text-emerald-400 border border-emerald-800/40 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> Desempeño
+                </button>
+                <button onclick="clearStrategicFilter()" id="pillar-clear-btn" class="px-3 py-1 bg-rose-950/40 hover:bg-rose-900/40 text-rose-400 border border-rose-800/40 text-xs font-bold rounded-lg transition-all hidden items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Limpiar
+                </button>
+            </div>
+
+            <!-- Right part: Actions (Exportar Acta) -->
+            <div class="flex-shrink-0 w-full lg:w-auto flex justify-center lg:justify-end">
+                <button onclick="openExportModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition border border-emerald-500/20 flex items-center gap-2 shadow-lg shadow-emerald-900/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Exportar Acta
                 </button>
             </div>
         </div>
 
         <!-- Dynamic Node Mind Map Area -->
-        <div id="view-mindmap" class="view-pane flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-center z-20 relative">
+        <div id="view-mindmap" class="view-pane flex-grow hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-center z-20 relative">
             <!-- SVG Connections Overlay -->
             <svg id="connections-svg" class="absolute inset-0 w-full h-full pointer-events-none z-10 hidden lg:block" style="min-height: 100%;">
                 <defs>
@@ -701,14 +1002,14 @@
                 </div>
                 <div id="card-line-4" onclick="inspectNode('line-4')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-rose-500/50 rounded-xl cursor-pointer transition flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <span class="w-6 h-6 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-bold flex items-center justify-center">④</span>
+                        <span class="w-6 h-6 rounded-full bg-rose-500/10 text-rose-400 border-rose-500/20 text-xs font-bold flex items-center justify-center">④</span>
                         <span class="text-xs font-semibold text-slate-200">Línea ④: Gestión de Información</span>
                     </div>
                     <div class="text-[9px] text-amber-500 flex items-center gap-1"><span class="w-1 h-1 bg-amber-500 rounded-full animate-pulse"></span></div>
                 </div>
                 <div id="card-line-5" onclick="inspectNode('line-5')" class="p-3 bg-slate-900/60 border border-slate-800 hover:border-purple-500/50 rounded-xl cursor-pointer transition flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <span class="w-6 h-6 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-bold flex items-center justify-center">⑤</span>
+                        <span class="w-6 h-6 rounded-full bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs font-bold flex items-center justify-center">⑤</span>
                         <span class="text-xs font-semibold text-slate-200">Línea ⑤: Planes de Acción</span>
                     </div>
                     <div class="text-[9px] text-amber-500 flex items-center gap-1"><span class="w-1 h-1 bg-amber-500 rounded-full animate-pulse"></span></div>
@@ -738,7 +1039,7 @@
         </div>
 
         <!-- ================= VISTA 2: ORGANIGRAMA JERÁRQUICO ================= -->
-        <div id="view-organigrama" class="view-pane hidden flex-col items-center gap-6 min-h-[550px]">
+        <div id="view-organigrama" class="view-pane flex flex-col items-center gap-6 min-h-[550px]">
             
             <!-- NIVEL 1: DIRECCIÓN GENERAL -->
             <div class="flex flex-col items-center relative w-full">
@@ -1075,6 +1376,201 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 00-2 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                     Copiar Acta
                 </button>
+                        <p class="text-[9px] text-slate-400 mt-0.5">Administración del Personal</p>
+                    </div>
+                    <div class="w-0.5 bg-slate-800 h-4"></div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <div onclick="inspectNode('gh-seleccion')" id="org-card-gh-seleccion" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-slate-400 font-bold block mb-0.5">Selección ①</span>
+                            <span class="text-slate-400 leading-tight">Atracción, reclutamiento y perfilamiento psicométrico.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-contratacion')" id="org-card-gh-contratacion" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-indigo-400 font-bold block mb-0.5">Contratación ②</span>
+                            <span class="text-slate-400 leading-tight">Legalización e incorporación formal a la entidad.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-bienestar')" id="org-card-gh-bienestar" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-amber-400 font-bold block mb-1">Bienestar ③</span>
+                            <span class="text-slate-400 leading-tight">Campañas de clima, recreación y cultura laboral.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-sst')" id="org-card-gh-sst" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-rose-400 font-bold block mb-0.5">SST ④</span>
+                            <span class="text-slate-400 leading-tight">Prevención de riesgos laborales y salud ocupacional.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-formacion')" id="org-card-gh-formacion" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-emerald-400 font-bold block mb-0.5">Formación y Capacitación ⑤</span>
+                            <span class="text-slate-400 leading-tight">Entrenamiento continuo para mitigar brechas.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-historias')" id="org-card-gh-historias" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-blue-400 font-bold block mb-0.5">Historias Laborales ⑥</span>
+                            <span class="text-slate-400 leading-tight">Custodia normativa oficial de folios y expedientes.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-salarios')" id="org-card-gh-salarios" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-pink-400 font-bold block mb-0.5">Salarios y Beneficios ⑦</span>
+                            <span class="text-slate-400 leading-tight">Esquemas de compensación estratégica.</span>
+                        </div>
+                        <div onclick="inspectNode('gh-nomina')" id="org-card-gh-nomina" class="cursor-pointer bg-slate-950 hover:bg-slate-900/60 p-2.5 rounded-lg border border-slate-850 hover:border-emerald-500/30 text-left text-[11px] transition">
+                            <span class="text-[9px] text-teal-400 font-bold block mb-0.5">Nómina y Seguridad Social ⑧</span>
+                            <span class="text-slate-400 leading-tight">Liquidación de aportes, retenciones y haberes mensuales.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Panel de Inspección de Nodo Seleccionado (Mesa de Validación, común pero solo visible en Fase II) -->
+    <section id="inspector-panel" class="hidden max-w-7xl w-full mx-auto px-4 pb-12 sm:px-6 lg:px-8 z-30 relative">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4 mb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg border border-amber-500/20">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    </span>
+                    <h3 class="text-sm font-extrabold text-slate-300 uppercase tracking-widest">🔎 Inspector y Mesa de Validación Activa</h3>
+                </div>
+                <!-- Estado del Proceso en Auditoría -->
+                <div id="global-validation-badge" class="px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-[10px] font-bold text-amber-400 flex items-center gap-1.5 animate-pulse">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                    Estado: Pendiente Definición de Alcance
+                </div>
+            </div>
+
+            <!-- Placeholder si no hay selección -->
+            <div id="inspector-placeholder" class="text-center py-8 text-slate-500 text-xs">
+                Haz clic en cualquier proceso de la izquierda o en las líneas de conexión de la derecha para iniciar la mesa de validación con el subdirector.
+            </div>
+
+            <!-- Contenedor Dinámico del Inspector -->
+            <div id="inspector-content" class="hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-5 pb-3 border-b border-slate-800/40">
+                    <div>
+                        <span id="inspect-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border">Badge</span>
+                        <h4 id="inspect-name" class="text-lg font-black text-white mt-1">Nombre del Nodo</h4>
+                    </div>
+                    <div class="text-left sm:text-right">
+                        <p class="text-[10px] text-slate-500 uppercase font-black">Clasificación</p>
+                        <p id="inspect-type" class="text-xs text-indigo-400 font-bold">Tipo</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- Ficha Técnica Izquierda: Caracterización, Articulación y Alcance (7/12) -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                            <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">📖 Caracterización del Proceso</h5>
+                            <p id="inspect-carac" class="text-xs text-slate-200 italic leading-relaxed">Definición...</p>
+                        </div>
+
+                        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                            <div class="flex justify-between items-center mb-1">
+                                <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">🔗 Articulación Neuronal (Sinergias)</h5>
+                                <!-- Pilar descriptor de TED 2026 -->
+                                <span id="inspect-pillar-badge" class="text-[9px] px-2 py-0.5 rounded-full font-bold">Pilar</span>
+                            </div>
+                            <p id="inspect-artic" class="text-xs text-slate-200 leading-relaxed">Conexión...</p>
+                        </div>
+
+                        <!-- ALCANCE CRÍTICO POR VALIDAR -->
+                        <div class="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 glow-active transition-all duration-300">
+                            <div class="flex items-center justify-between mb-2">
+                                <h5 class="text-[10px] font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    ⚠️ Alcance Propuesto (Por Definir)
+                                </h5>
+                                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="check-scope" onchange="toggleValidationCheck('scope')" class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+                                    <span class="text-[9px] font-bold text-slate-400">¿Alcance Validado?</span>
+                                </label>
+                            </div>
+                            <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+                                <p id="inspect-scope" class="font-medium">Alcance...</p>
+                                <div class="bg-slate-950/70 p-2.5 rounded border border-dashed border-amber-500/30 text-[11px] text-amber-300/90 italic">
+                                    "La definición de límites operativos y responsabilidades formales queda sujeta a la validación del Subdirector de Desarrollo Organizacional."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ficha Técnica Derecha: Entradas, Salidas y Notas del Taller (5/12) -->
+                    <div class="lg:col-span-5 space-y-5">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                            <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                                <div class="flex items-center justify-between mb-2 pb-1 border-b border-slate-900">
+                                    <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">📥 Entradas Propuestas</h5>
+                                    <label class="inline-flex items-center gap-1 cursor-pointer">
+                                        <input type="checkbox" id="check-inputs" onchange="toggleValidationCheck('inputs')" class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+                                        <span class="text-[9px] text-slate-500">¿Val?</span>
+                                    </label>
+                                </div>
+                                <ul id="inspect-inputs" class="text-xs text-slate-300 space-y-1.5"></ul>
+                            </div>
+
+                            <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
+                                <div class="flex items-center justify-between mb-2 pb-1 border-b border-slate-900">
+                                    <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">📤 Salidas Propuestas</h5>
+                                    <label class="inline-flex items-center gap-1 cursor-pointer">
+                                        <input type="checkbox" id="check-outputs" onchange="toggleValidationCheck('outputs')" class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+                                        <span class="text-[9px] text-slate-500">¿Val?</span>
+                                    </label>
+                                </div>
+                                <ul id="inspect-outputs" class="text-xs text-slate-300 space-y-1.5"></ul>
+                            </div>
+                        </div>
+
+                        <!-- BLOCK DE NOTAS DEL TALLER EN VIVO -->
+                        <div class="bg-slate-950/70 p-4 rounded-xl border border-slate-800 shadow-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <h5 class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    ✍️ Acuerdos y Notas con el Subdirector
+                                </h5>
+                                <span class="text-[9px] text-slate-500 font-medium">Se almacena en vivo</span>
+                            </div>
+                            <textarea id="meeting-notes-area" rows="3" oninput="saveCurrentNodeNotes()" placeholder="Escribe aquí los comentarios del subdirector, ajustes en entradas/salidas o cambios en el alcance durante la reunión..." class="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
+                            <div class="flex justify-between items-center mt-2 text-[10px]">
+                                <span id="save-status-indicator" class="text-emerald-400 flex items-center gap-1 opacity-0 transition-opacity">
+                                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> Cambios guardados
+                                </span>
+                                <button onclick="clearCurrentNotes()" class="text-slate-500 hover:text-rose-400 transition">Borrar notas</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- VENTANA MODAL: EXPORTAR ACTA OFICIAL DEL TALLER -->
+    <div id="export-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl">
+            <!-- Header Modal -->
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </span>
+                    <h3 class="text-base font-extrabold text-white uppercase tracking-wider">Acta Oficial del Taller de Validación - SDO</h3>
+                </div>
+                <button onclick="closeExportModal()" class="text-slate-400 hover:text-white transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <!-- Cuerpo Modal -->
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow text-slate-300 text-xs space-y-6" id="export-report-body">
+            </div>
+            <!-- Botones del Pie -->
+            <div class="p-6 border-t border-slate-800 flex flex-wrap justify-end gap-3 bg-slate-950/40 rounded-b-3xl">
+                <button onclick="copyReportToClipboard()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition border border-slate-700 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 00-2 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    Copiar Acta
+                </button>
                 <button onclick="printReport()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-3a2 2 0 00-2-2H9a2 2 0 00-2 2v3a2 2 0 002 2zm5-14V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m6 0H9"></path></svg>
                     Imprimir / Guardar en PDF
@@ -1092,20 +1588,41 @@
     // =========================================================================
     // BASE DE DATOS DE PROCESOS (FASE II)
     // =========================================================================
-const nodesDb = {
-            'subdireccion': {
-                name: "Subdirección de Desarrollo Organizacional (SDO)",
-                type: "Mando Directivo Superior",
-                badge: "DIRECCIÓN SDO",
-                badgeClass: "bg-indigo-500/10 text-indigo-400 border-indigo-500/35",
-                caracterizacion: "Lidera las directrices, diseño de capacidades de personal, estructuras formales de cargos y planes estratégicos organizacionales globales de la Caja de Compensación.",
-                articulacion: "Gobierna y orquesta los esfuerzos transversales de los frentes de T.E.D, Innovación, Productividad y Gestión Humana.",
-                alcance: "[VALIDAR CON SUBDIRECTOR] Dirección estratégica global de todos los frentes de la subdirección. Comprende la aprobación final de manuales, estructuras salariales y planta.",
-                inputs: ["• 1. Planes Operativos CCF", "• 3. Alineamiento Institucional"],
-                outputs: ["• 1. Planeación (SDO)", "• 5. Planes de Acción Ejecutados"],
-                strategicPillar: "estrategia"
-            },
-            'ted': {
+    const nodesDb = {
+        'subdireccion': {
+            name: "Subdirección de Desarrollo Organizacional (SDO)",
+            type: "Mando Directivo Superior",
+            badge: "DIRECCIÓN SDO",
+            badgeClass: "bg-indigo-500/10 text-indigo-400 border-indigo-500/35",
+            caracterizacion: "Lidera las directrices, diseño de capacidades de personal, estructuras formales de cargos y planes estratégicos organizacionales globales de la Caja de Compensación.",
+            articulacion: "Gobierna y orquesta los esfuerzos transversales de los frentes de T.E.D, Innovación, Productividad y Gestión Humana.",
+            alcance: "[VALIDAR CON SUBDIRECTOR] Dirección estratégica global de todos los frentes de la subdirección. Comprende la aprobación final de manuales, estructuras salariales y planta.",
+            inputs: [
+                "• Planes operativos",
+                "• Rutas de usuario y de empleado",
+                "• Gestión del conocimiento",
+                "• Diseño y rediseño de servicios",
+                "• Ideación, cocreación y validación de soluciones",
+                "• Sinergia organizacional (Aportes)",
+                "• Assessment",
+                "• Cargas laborales y suficiencias",
+                "• Datos",
+                "• Innpacto"
+            ],
+            outputs: [
+                "• Plan carrera",
+                "• Documentación cargos y procedimientos críticos",
+                "• Optimización de procedimientos",
+                "• Rutas documentadas",
+                "• Negocio diseñado - Documento y Carpeta",
+                "• Propuestas de ideación documentadas",
+                "• Planes de acción e intervención",
+                "• Informe final de cargas",
+                "• Modelos analíticos"
+            ],
+            strategicPillar: "estrategia"
+        },
+        'ted': {
                 name: "Transformación Empresarial Digital (TED)",
                 type: "Equipo de Arquitectura Técnica",
                 badge: "T.E.D",
@@ -1611,7 +2128,7 @@ const nodesDb = {
         
     // State Variables
     let activeStrategicPillarFilter = null;
-    let currentView = 'mindmap'; // 'mindmap' or 'organigrama'
+    let currentView = 'organigrama'; // 'mindmap' or 'organigrama'
     const activeNodes = {
         'ted': false,
         'inn': false,
@@ -2330,19 +2847,161 @@ const nodesDb = {
     function switchRefTab(tabId) {
         const tabTed = document.getElementById('reftab-ted');
         const tabJust = document.getElementById('reftab-justificacion');
+        const tabSipoc = document.getElementById('reftab-sipoc');
         const contentTed = document.getElementById('refcontent-ted');
         const contentJust = document.getElementById('refcontent-justificacion');
+        const contentSipoc = document.getElementById('refcontent-sipoc');
 
+        // Reset classes for tabs
+        [tabTed, tabJust, tabSipoc].forEach(tab => {
+            if (tab) tab.className = "px-4 sm:px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all";
+        });
+        
+        // Hide all contents
+        [contentTed, contentJust, contentSipoc].forEach(content => {
+            if (content) content.classList.add('hidden');
+        });
+
+        // Activate selected
         if (tabId === 'ted') {
-            tabTed.className = "px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all";
-            tabJust.className = "px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all";
-            contentTed.classList.remove('hidden');
-            contentJust.classList.add('hidden');
+            if (tabTed) tabTed.className = "px-4 sm:px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all";
+            if (contentTed) contentTed.classList.remove('hidden');
+        } else if (tabId === 'justificacion') {
+            if (tabJust) tabJust.className = "px-4 sm:px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all";
+            if (contentJust) contentJust.classList.remove('hidden');
+        } else if (tabId === 'sipoc') {
+            if (tabSipoc) tabSipoc.className = "px-4 sm:px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all";
+            if (contentSipoc) contentSipoc.classList.remove('hidden');
+            lucide.createIcons();
+        }
+    }
+
+    const sipocMappings = {
+        'ted': {
+            inputs: ['sipoc-in-planes', 'sipoc-in-rutas', 'sipoc-in-conocimiento', 'sipoc-in-assessment', 'sipoc-in-datos'],
+            outputs: ['sipoc-out-documentos', 'sipoc-out-rutas', 'sipoc-out-modelos'],
+            border: 'border-indigo-500/80 shadow-[0_0_20px_rgba(99,102,241,0.25)]',
+            inColor: 'border-indigo-500/40 bg-indigo-950/15',
+            outColor: 'border-indigo-500/40 bg-indigo-950/15'
+        },
+        'inn': {
+            inputs: ['sipoc-in-rutas', 'sipoc-in-diseno', 'sipoc-in-ideacion', 'sipoc-in-innpacto'],
+            outputs: ['sipoc-out-negocio', 'sipoc-out-propuestas', 'sipoc-out-planes'],
+            border: 'border-blue-500/80 shadow-[0_0_20px_rgba(59,130,246,0.25)]',
+            inColor: 'border-blue-500/40 bg-blue-950/15',
+            outColor: 'border-blue-500/40 bg-blue-950/15'
+        },
+        'pro': {
+            inputs: ['sipoc-in-planes', 'sipoc-in-cargas', 'sipoc-in-datos'],
+            outputs: ['sipoc-out-optimizacion', 'sipoc-out-cargas', 'sipoc-out-modelos'],
+            border: 'border-purple-500/80 shadow-[0_0_20px_rgba(168,85,247,0.25)]',
+            inColor: 'border-purple-500/40 bg-purple-950/15',
+            outColor: 'border-purple-500/40 bg-purple-950/15'
+        },
+        'gh': {
+            inputs: ['sipoc-in-planes', 'sipoc-in-sinergia', 'sipoc-in-assessment', 'sipoc-in-datos'],
+            outputs: ['sipoc-out-carrera', 'sipoc-out-documentos', 'sipoc-out-planes'],
+            border: 'border-emerald-500/80 shadow-[0_0_20px_rgba(16,185,129,0.25)]',
+            inColor: 'border-emerald-500/40 bg-emerald-950/15',
+            outColor: 'border-emerald-500/40 bg-emerald-950/15'
+        }
+    };
+
+    let activeSipocRole = null;
+
+    function highlightSipocRole(roleId) {
+        const mapping = sipocMappings[roleId];
+        if (!mapping) return;
+
+        // Dim other roles
+        const roles = ['ted', 'inn', 'pro', 'gh'];
+        roles.forEach(r => {
+            const el = document.getElementById(`sipoc-role-${r}`);
+            if (el) {
+                if (r === roleId) {
+                    el.style.opacity = '1';
+                    el.className = el.className.replace(/border-slate-800/g, '') + ' ' + mapping.border;
+                } else {
+                    el.style.opacity = '0.25';
+                }
+            }
+        });
+
+        const core = document.getElementById('sipoc-core-sinergia');
+        if (core) core.style.opacity = '0.25';
+
+        // Highlight inputs
+        document.querySelectorAll('#sipoc-inputs-container > div').forEach(el => {
+            if (mapping.inputs.includes(el.id)) {
+                el.style.opacity = '1';
+                el.className = el.className.replace('border-slate-800/80 bg-slate-900/40', '') + ' ' + mapping.inColor;
+            } else {
+                el.style.opacity = '0.2';
+            }
+        });
+
+        // Highlight outputs
+        document.querySelectorAll('#sipoc-outputs-container > div').forEach(el => {
+            if (mapping.outputs.includes(el.id)) {
+                el.style.opacity = '1';
+                el.className = el.className.replace('border-slate-800/80 bg-slate-900/40', '') + ' ' + mapping.outColor;
+            } else {
+                el.style.opacity = '0.2';
+            }
+        });
+    }
+
+    function resetSipocHighlight() {
+        if (activeSipocRole) return; // Ignore reset if clicked
+        
+        const roles = ['ted', 'inn', 'pro', 'gh'];
+        roles.forEach(r => {
+            const el = document.getElementById(`sipoc-role-${r}`);
+            if (el) {
+                el.style.opacity = '1';
+                el.classList.remove(
+                    'border-indigo-500/80', 'shadow-[0_0_20px_rgba(99,102,241,0.25)]',
+                    'border-blue-500/80', 'shadow-[0_0_20px_rgba(59,130,246,0.25)]',
+                    'border-purple-500/80', 'shadow-[0_0_20px_rgba(168,85,247,0.25)]',
+                    'border-emerald-500/80', 'shadow-[0_0_20px_rgba(16,185,129,0.25)]'
+                );
+                el.classList.add('border-slate-800');
+            }
+        });
+
+        const core = document.getElementById('sipoc-core-sinergia');
+        if (core) core.style.opacity = '1';
+
+        document.querySelectorAll('#sipoc-inputs-container > div').forEach(el => {
+            el.style.opacity = '1';
+            el.classList.remove(
+                'border-indigo-500/40', 'bg-indigo-950/15',
+                'border-blue-500/40', 'bg-blue-950/15',
+                'border-purple-500/40', 'bg-purple-950/15',
+                'border-emerald-500/40', 'bg-emerald-950/15'
+            );
+            el.classList.add('border-slate-800/80', 'bg-slate-900/40');
+        });
+
+        document.querySelectorAll('#sipoc-outputs-container > div').forEach(el => {
+            el.style.opacity = '1';
+            el.classList.remove(
+                'border-indigo-500/40', 'bg-indigo-950/15',
+                'border-blue-500/40', 'bg-blue-950/15',
+                'border-purple-500/40', 'bg-purple-950/15',
+                'border-emerald-500/40', 'bg-emerald-950/15'
+            );
+            el.classList.add('border-slate-800/80', 'bg-slate-900/40');
+        });
+    }
+
+    function toggleSipocRole(roleId) {
+        if (activeSipocRole === roleId) {
+            activeSipocRole = null;
+            resetSipocHighlight();
         } else {
-            tabJust.className = "px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white transition-all";
-            tabTed.className = "px-5 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-all";
-            contentJust.classList.remove('hidden');
-            contentTed.classList.add('hidden');
+            activeSipocRole = roleId;
+            highlightSipocRole(roleId);
         }
     }
 
@@ -2500,6 +3159,9 @@ const nodesDb = {
     });
     
     window.addEventListener('load', () => {
+        // Initialize view state
+        switchView('organigrama');
+
         // Initialize diagrams validation visual status
         Object.keys(nodesDb).forEach(key => {
             updateVisualStatusOnDiagrams(key);
